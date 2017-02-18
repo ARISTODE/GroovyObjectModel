@@ -45,8 +45,14 @@ class Main {
         assert num2.callmethod("abs") == 5 : "ab method fail (Numeric)";
         assert num1.callmethod("add", num2) == -3.5 : "add method fail (Numeric)";
         assert num1.callmethod("minus", num2) == 6.5 : "add method fail (Numeric)";
-        assert num1.callmethod("multiply", num2) == -7.5 : "add method fail (Numeric)";
         assert num1.callmethod("div", num2) == -0.3 : "add method fail (Numeric)";
-        assert num2.callmethod("exponent", 2) == 25 : "exponent method fail (Numeric)";
+
+
+        // Integer testing
+        Instance int1 = new Instance(Global._RyInteger, 5);
+        Instance int2 = new Instance(Global._RyInteger, 3);
+        assert int1.callmethod("multiply", int2) == 15 : "add method fail (Integer)";
+        assert int1.callmethod("exponent", 2) == 25 : "exponent method fail (Integer)";
+
     }
 }

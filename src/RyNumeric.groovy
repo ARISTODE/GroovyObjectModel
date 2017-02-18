@@ -32,19 +32,14 @@ class RyNumeric {
                 return self.default_val() - ((Instance)args[0]).default_val();
         }
 
-        def multiply = {
-            self, Object... args ->
-                return self.default_val() * ((Instance)args[0]).default_val();
-        }
-
         def div = {
             self, Object... args ->
                 return self.default_val() / ((Instance)args[0]).default_val();
         }
 
-        def exponent = {
+        def module = {
             self, Object... args ->
-                return Math.pow(self.default_val(), (Double)args[0]);
+                return self.deault_val() % ((Instance)args[0]).default_val();
         }
 
         def cls_mth_map = [:];
@@ -54,9 +49,8 @@ class RyNumeric {
         cls_mth_map.put("abs", abs);
         cls_mth_map.put("add", add);
         cls_mth_map.put("minus", minus);
-        cls_mth_map.put("multiply", multiply);
         cls_mth_map.put("div", div);
-        cls_mth_map.put("exponent", exponent);
+        cls_mth_map.put("module", module);
 
         return cls_mth_map;
     }

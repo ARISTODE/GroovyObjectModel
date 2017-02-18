@@ -10,7 +10,8 @@ class Global {
 
     // Numeric operations setup
     public static RyBaseClass _RyNumeic = new RyBaseClass("RyNumeric", RyNumeric.initialize(), _RyClass, _TopObject);
-
+    public static RyBaseClass _RyInteger = new RyBaseClass("RyInteger", RyInteger.initialize(), _RyClass, _RyNumeic);
+    public static RyBaseClass _RyFloat = new RyBaseClass("RyFloat", RyFloat.initialze(), _RyClass, _RyNumeic);
 
     //other global objects
     public static final Object MISSING = new Object();
