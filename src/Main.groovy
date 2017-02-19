@@ -1,3 +1,5 @@
+import RuntimeExceptions.ArgumentTypeError
+
 class Main {
     public static void main(String[] args) {
         Global.class_reference_setup();
@@ -30,6 +32,7 @@ class Main {
         assert str1.callmethod("length") == 5 : "length test fail";
         assert str1.callmethod("concat", str2) == "Hellohello": "concat method fail (String)";
         println(str2.callmethod("capitalize"));
+        assert ((Instance)str2.callmethod("multiply", new Instance(Global._RyInteger, 2))).default_val() == "hellohello" : "string multiply method fail (String)";
         assert str1.callmethod("getChar",3) == 'l' : "getChar method fail (String)";
         assert str2.callmethod("chop") == "hell" : "chop method fail (String)";
         str2.callmethod("chop_change");
@@ -51,7 +54,15 @@ class Main {
         // Integer testing
         Instance int1 = new Instance(Global._RyInteger, 5);
         Instance int2 = new Instance(Global._RyInteger, 3);
-        assert int1.callmethod("multiply", int2) == 15 : "add method fail (Integer)";
+
+        // test integer add operation
+        try {
+            println(((Instance)int1.callmethod("add", _main)).default_val());
+        } catch (ArgumentTypeError e) {
+            println(e.toString());
+        }
+
+        assert ((Instance)int1.callmethod("multiply", int2)).default_val() == 15 : "add method fail (Integer)";
         assert int1.callmethod("exponent", 2) == 25 : "exponent method fail (Integer)";
 
     }

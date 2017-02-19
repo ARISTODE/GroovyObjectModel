@@ -1,3 +1,5 @@
+import RuntimeExceptions.ArgumentTypeError
+
 class RyString {
     def static initialize() {
         def value_standarlize = {
@@ -18,6 +20,55 @@ class RyString {
                 String self_str =(self.read_dic("__default__"));
                 String other_str = ((Instance)args[0]).read_dic( "__default__");
                 return value_standarlize(self_str <=> other_str);
+        }
+
+        def add = {
+            self, Object... args ->
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+                String arg_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        String new_val = self.default_val() + other.default_val();
+                        return new Instance(Global._RyString, new_val);
+                    case "RyFloat":
+                        String new_val = self.default_val() + other.default_val();
+                        return new Instance(Global._RyString, new_val);
+                    case "RyString":
+                        String new_val = self.default_val() + other.default_val();
+                        return new Instance(Global._RyString, new_val);
+                    default:
+                        throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
+                        break;
+                }
+        }
+
+        def multiply = {
+            self, Object... args ->
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+                String arg_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        StringBuilder sb = new StringBuilder();
+                        int loop_time = (Integer)(other.default_val());
+                        int i = 0;
+
+                        while (i < loop_time) {
+                            sb.append(self.default_val());
+                            i++;
+                        }
+
+                        String new_val = sb.toString();
+                        return new Instance(Global._RyInteger, new_val);
+                    default:
+                        throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
+                        break;
+                }
         }
 
         def length = {
@@ -105,6 +156,8 @@ class RyString {
 
         def cls_mth_map = [:];
         cls_mth_map.put("ceylon", ceylon); // <=>
+        cls_mth_map.put("add", add);
+        cls_mth_map.put("multiply", multiply);
         cls_mth_map.put("length", length);
         cls_mth_map.put("concat", concat);
         cls_mth_map.put("capitalize", capitalize);

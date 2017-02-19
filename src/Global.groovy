@@ -13,6 +13,10 @@ class Global {
     public static RyBaseClass _RyInteger = new RyBaseClass("RyInteger", RyInteger.initialize(), _RyClass, _RyNumeic);
     public static RyBaseClass _RyFloat = new RyBaseClass("RyFloat", RyFloat.initialze(), _RyClass, _RyNumeic);
 
+    // Boolean classes
+    public static RyBaseClass _RyTrueClass = new RyBaseClass("TrueClass", TrueClass.initialize(), _RyClass, _TopObject);
+    public static RyBaseClass _RyFalseClass = new RyBaseClass("FalseClass", FalseClass.initialize(), _RyClass, _TopObject);
+
     //other global objects
     public static final Object MISSING = new Object();
 

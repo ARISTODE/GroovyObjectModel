@@ -1,9 +1,86 @@
+import RuntimeExceptions.ArgumentTypeError
+
 class RyInteger {
     def static initialize() {
 
+        def add = {
+            self, Object... args ->
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        int new_val = self.default_val() + other.default_val();
+                        return new Instance(Global._RyInteger, new_val);
+                    case "RyFloat":
+                        float new_val = self.default_val() + other.default_val();
+                        return new Instance(Global._RyFloat, new_val);
+                    case "RyString":
+                        String new_val = self.default_val() + other.default_val();
+                        return new Instance(Global._RyString, new_val);
+                    default:
+                        throw new ArgumentTypeError("Minus Method cannot take a ${cls_name} arguments");
+                        break;
+                }
+        }
+
+        def minus = {
+            self, Object... args ->
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        int new_val = self.default_val() - other.default_val();
+                        return new Instance(Global._RyInteger, new_val);
+                    case "RyFloat":
+                        float new_val = self.default_val() - other.default_val();
+                        return new Instance(Global._RyFloat, new_val);
+                    default:
+                        throw new ArgumentTypeError("Minus Method cannot take a ${cls_name} arguments");
+                        break;
+                }
+        }
+
         def multiply = {
             self, Object... args ->
-                return self.default_val() * ((Instance)args[0]).default_val();
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        int new_val = self.default_val() * other.default_val();
+                        return new Instance(Global._RyInteger, new_val);
+                    case "RyFloat":
+                        float new_val = self.default_val() * other.default_val();
+                        return new Instance(Global._RyFloat, new_val);
+                    default:
+                        throw new ArgumentTypeError("Multiply Method cannot take a ${cls_name} arguments");
+                        break;
+                }
+        }
+
+
+        def div = {
+            self, Object... args ->
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        int new_val = self.default_val() / other.default_val();
+                        return new Instance(Global._RyInteger, new_val);
+                    case "RyFloat":
+                        float new_val = self.default_val() / other.default_val();
+                        return new Instance(Global._RyFloat, new_val);
+                    default:
+                        throw new ArgumentTypeError("Multiply Method cannot take a ${cls_name} arguments");
+                        break;
+                }
         }
 
         def exponent = {
@@ -47,7 +124,10 @@ class RyInteger {
         }
 
         def cls_mth_map = [:];
+        cls_mth_map.put("add", add);
+        cls_mth_map.put("minus", minus);
         cls_mth_map.put("multiply", multiply);
+        cls_mth_map.put("div", div);
         cls_mth_map.put("exponent", exponent);
         cls_mth_map.put("shift_left", shift_left);
         cls_mth_map.put("shift_right", shift_right);
