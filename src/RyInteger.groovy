@@ -3,6 +3,22 @@ import RuntimeExceptions.ArgumentTypeError
 class RyInteger {
     def static initialize() {
 
+        def ceylon = {
+            self, Object... args ->
+                Integer self_val =(self.read_dic("__default__"));
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        return self_val <=> (Integer)other.default_val();
+                    case "RyFloat":
+                        return self_val <=> (Float)other.default_val();
+                    default:
+                        throw new ArgumentTypeError("ceylon Method cannot take a ${cls_name} arguments");
+                }
+        }
+
         def add = {
             self, Object... args ->
                 self = (Instance)self;
@@ -83,31 +99,51 @@ class RyInteger {
                 }
         }
 
+        def module = {
+            self, Object... args ->
+                self = (Instance)self;
+                Instance other = (Instance)args[0];
+                String cls_name = other.read_cls().name();
+                String arg_name = other.read_cls().name();
+
+                switch (cls_name) {
+                    case "RyInteger":
+                        int new_val = self.default_val() % other.default_val();
+                        return new Instance(Global._RyFloat, new_val);
+                    case "RyFloat":
+                        float new_val = self.default_val() % other.default_val();
+                        return new Instance(Global._RyFloat, new_val);
+                    default:
+                        throw new ArgumentTypeError("Module Method cannot take a ${arg_name} arguments");
+                        break;
+                }
+        }
+
         def exponent = {
             self, Object... args ->
-                return Math.pow(self.default_val(), (Double)args[0]);
+                return new Instance(Global._RyInteger, Math.pow(self.default_val(), (Double)args[0]));
         }
 
         def shift_left = {
             self, Object... args ->
                 Integer bits = (Integer)args[0];
-                return ((Instance)self).default_val() << bits;
+                return new Instance(Global._RyInteger, ((Instance)self).default_val() << bits);
         }
 
         def shift_right = {
             self, Object... args ->
                 Integer bits = (Integer)args[0];
-                return ((Instance)self).default_val() >> bits;
+                return new Instance(Global._RyInteger, ((Instance)self).default_val() >> bits);
         }
 
         def is_even = {
             self, Object... args ->
-                return ((Instance)self).default_val() % 2 == 0;
+                return ((Instance)self).default_val() % 2 == 0 ? new Instance(Global._RyTrueClass, true) : new Instance(Global._RyFalseClass, false);
         }
 
         def is_odd = {
             self, Object... args ->
-                return !is_even(self, args);
+                return ((Instance)self).default_val() % 2 != 0 ? new Instance(Global._RyTrueClass, true) : new Instance(Global._RyFalseClass, false);
         }
 
         def to_s = {
@@ -124,6 +160,7 @@ class RyInteger {
         }
 
         def cls_mth_map = [:];
+        cls_mth_map.put("ceylon", ceylon);
         cls_mth_map.put("add", add);
         cls_mth_map.put("minus", minus);
         cls_mth_map.put("multiply", multiply);

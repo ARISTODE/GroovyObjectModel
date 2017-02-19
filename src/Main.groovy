@@ -64,6 +64,5 @@ class Main {
 
         assert ((Instance)int1.callmethod("multiply", int2)).default_val() == 15 : "add method fail (Integer)";
         assert int1.callmethod("exponent", 2) == 25 : "exponent method fail (Integer)";
-
     }
 }
