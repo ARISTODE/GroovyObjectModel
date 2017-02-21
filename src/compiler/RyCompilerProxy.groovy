@@ -1,12 +1,16 @@
 package compiler
 
 import compiler.listeners.ProxyParseTreeListener
+import compiler.listeners.RyCondListener
+import compiler.listeners.RyDynamicListener
 import compiler.listeners.RyExpressionListListener
 import compiler.listeners.RyExpressionListener
 import compiler.listeners.RyFloatListener
+import compiler.listeners.RyFunctionListener
 import compiler.listeners.RyIntegerListener
 import compiler.listeners.RyProgListener
-import compiler.listeners.RyRvalueListener
+import compiler.listeners.RyValueListener
+import compiler.listeners.RyStringListener
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
@@ -30,13 +34,6 @@ class RyCompilerProxy {
     public static ByteArrayOutputStream expression_stream = new ByteArrayOutputStream();
     public static ByteArrayOutputStream function_stream = new ByteArrayOutputStream();
     public static ByteArrayOutputStream error_stream = new ByteArrayOutputStream();
-
-    static void printToOutStream(String text) {
-//            ByteArrayOutputStream out = stack_out_stream.pop();
-        PrintStream ps = new PrintStream(expression_stream);
-        ps.print(text);
-//            stack_out_stream.push(out);
-    }
 
     public static void main(String[] args) {
         String inputFile = null;
@@ -70,9 +67,13 @@ class RyCompilerProxy {
         proxy.add(new RyProgListener());
         proxy.add(new RyExpressionListListener());
         proxy.add(new RyExpressionListener());
-        proxy.add(new RyRvalueListener());
+        proxy.add(new RyDynamicListener());
+        proxy.add(new RyValueListener());
         proxy.add(new RyIntegerListener());
         proxy.add(new RyFloatListener());
+        proxy.add(new RyStringListener());
+        proxy.add(new RyCondListener());
+        proxy.add(new RyFunctionListener());
 
 //        Evaluator eval = new Evaluator();
         walker.walk(proxy, tree);
@@ -111,16 +112,16 @@ class RyCompilerProxy {
                 ret_text = "add";
                 break;
             case "-" :
-                ret_text = "min";
+                ret_text = "minus";
                 break;
             case "*" :
-                ret_text = "mul";
+                ret_text = "multiply";
                 break;
             case "/" :
                 ret_text = "div";
                 break;
             case "%" :
-                ret_text = "mod";
+                ret_text = "module";
                 break;
         }
 
@@ -179,5 +180,35 @@ class RyCompilerProxy {
 
     public static String generateResultExpression(String leftVal, String operation, String rightVal) {
         return leftVal + "." + operation + "(" + rightVal + ")";
+    }
+
+    public static void printToOutStream(String text) {
+//            ByteArrayOutputStream out = stack_out_stream.pop();
+        PrintStream ps = new PrintStream(expression_stream);
+        ps.print(text);
+//            stack_out_stream.push(out);
+    }
+
+    public static void printToFunctionStream(String text) {
+        PrintStream ps = new PrintStream(function_stream);
+        ps.print(text);
+    }
+
+    public static void printToMainStream(String text) {
+//            ByteArrayOutputStream out = main_stream;
+        PrintStream ps = new PrintStream(expression_stream);
+        ps.println(text);
+//            stack_out_stream.push(out);
+    }
+
+    public static void printToErrorStream(String text) {
+        PrintStream ps = new PrintStream(error_stream);
+        ps.println(text);
+    }
+
+    public static int derieveParamNum(String params_expression) {
+        String params = params_expression.substring(1, params_expression.length());
+        String[] param_list = params.split(",");
+        return  param_list.length;
     }
 }

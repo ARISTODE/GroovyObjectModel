@@ -48,16 +48,16 @@ public class RyCompiler {
                     ret_text = "add";
                     break;
                 case "-" :
-                    ret_text = "min";
+                    ret_text = "minus";
                     break;
                 case "*" :
-                    ret_text = "mul";
+                    ret_text = "multiply";
                     break;
                 case "/" :
                     ret_text = "div";
                     break;
                 case "%" :
-                    ret_text = "mod";
+                    ret_text = "module";
                     break;
             }
 
