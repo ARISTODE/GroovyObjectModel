@@ -12,7 +12,12 @@ class RyIntegerListener extends RyBaseListener {
 
         switch(ctx.op.getType()) {
             case RyParser.ASSIGN:
-                int_assignment_expression = "Instance ${var} = ${int_result_expression};\n";
+                if (RyCompilerProxy.var_definition.contains(var)) {
+                    int_assignment_expression = "${var} = ${int_result_expression}";
+                } else {
+                    int_assignment_expression = "Instance ${var} = ${int_result_expression}";
+                    RyCompilerProxy.var_definition.add(var);
+                }
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
@@ -32,7 +37,7 @@ class RyIntegerListener extends RyBaseListener {
             RyCompilerProxy.node_expression.put(ctx, int_result_expression);
         } else {
             if (ctx.getChildCount() == 1) {
-                String int_result_expression = "new Instance(\"Global._RyInteger\",${RyCompilerProxy.node_expression.get(ctx.getChild(0))})";
+                String int_result_expression = "new Instance(Global._RyInteger,${RyCompilerProxy.node_expression.get(ctx.getChild(0))})";
                 RyCompilerProxy.node_expression.put(ctx, int_result_expression);
             }
         }

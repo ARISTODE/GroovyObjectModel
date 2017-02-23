@@ -547,10 +547,10 @@ public class RyCompiler {
             node_expression.put(ctx, id_expression);
         }
 
-        public void exitId(RyParser.IdContext ctx) {
-            String id_expression = ctx.ID().getText();
-            node_expression.put(ctx, id_expression);
-        }
+//        public void exitId(RyParser.IdContext ctx) {
+//            String id_expression = ctx.ID().getText();
+//            node_expression.put(ctx, id_expression);
+//        }
 
         // ================================  If statement  =======================================
 

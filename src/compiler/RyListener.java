@@ -1,4 +1,5 @@
-package compiler;// Generated from Ry.g4 by ANTLR 4.5
+// Generated from Ry.g4 by ANTLR 4.5
+package compiler;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -537,16 +538,6 @@ public interface RyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNil_t(RyParser.Nil_tContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link RyParser#id}.
-	 * @param ctx the parse tree
-	 */
-	void enterId(RyParser.IdContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link RyParser#id}.
-	 * @param ctx the parse tree
-	 */
-	void exitId(RyParser.IdContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RyParser#terminator}.
 	 * @param ctx the parse tree

@@ -1,5 +1,5 @@
-package compiler;// Generated from Ry.g4 by ANTLR 4.5
-
+// Generated from Ry.g4 by ANTLR 4.5
+package compiler;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -647,18 +647,6 @@ public class RyBaseListener implements RyListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNil_t(RyParser.Nil_tContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterId(RyParser.IdContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitId(RyParser.IdContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

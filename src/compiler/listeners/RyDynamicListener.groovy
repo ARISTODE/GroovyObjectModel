@@ -11,13 +11,18 @@ class RyDynamicListener extends RyBaseListener{
         String dynamic_assignment_expression = "";
 
         if (ctx.op.getText().equals("=")) {
-            dynamic_assignment_expression = "Value " + left_expression + " = " + right_expression;
+            if (RyCompilerProxy.var_definition.contains(left_expression)) {
+                dynamic_assignment_expression = "${left_expression } = ${right_expression}";
+            } else {
+                dynamic_assignment_expression = "Instance ${left_expression } = ${right_expression}";
+                RyCompilerProxy.var_definition.add(left_expression);
+            }
         } else {
             String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
             dynamic_assignment_expression = RyCompilerProxy.generateResultExpression(left_expression, opr_text,right_expression);
         }
 
-        dynamic_assignment_expression += ";";
+        dynamic_assignment_expression += ";\n";
         RyCompilerProxy.node_expression.put(ctx, dynamic_assignment_expression);
     }
 
@@ -45,8 +50,9 @@ class RyDynamicListener extends RyBaseListener{
         RyCompilerProxy.node_expression.put(ctx, id_expression);
     }
 
-    public void exitId(RyParser.IdContext ctx) {
-        String id_expression = ctx.ID().getText();
-        RyCompilerProxy.node_expression.put(ctx, id_expression);
+    public void exitVar(RyParser.VarContext ctx) {
+        String var_expression = ctx.ID().getText();
+        RyCompilerProxy.node_expression.put(ctx, var_expression);
     }
+
 }

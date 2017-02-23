@@ -1,16 +1,6 @@
 package compiler
 
-import compiler.listeners.ProxyParseTreeListener
-import compiler.listeners.RyCondListener
-import compiler.listeners.RyDynamicListener
-import compiler.listeners.RyExpressionListListener
-import compiler.listeners.RyExpressionListener
-import compiler.listeners.RyFloatListener
-import compiler.listeners.RyFunctionListener
-import compiler.listeners.RyIntegerListener
-import compiler.listeners.RyProgListener
-import compiler.listeners.RyValueListener
-import compiler.listeners.RyStringListener
+import compiler.listeners.*
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
@@ -18,16 +8,21 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import utils.Formatter
 
+import java.lang.reflect.Array
+
 class RyCompilerProxy {
     // ------------- initialze setups -------------
 
     // create parse tree properties to store each node's information
     public static ParseTreeProperty<String> value_store = new ParseTreeProperty<String>();
-    // used to store node's
+    // used to store node's expression
     public static ParseTreeProperty<String> node_expression = new ParseTreeProperty<String>();
+    // check for variable definition repetition
+    public static ArrayList<String> var_definition = new ArrayList<>();
     // map used to store function params list
     public static HashMap<String, Integer> function_definition = new HashMap<>();
     public static ParseTreeProperty<Integer> function_param_number = new ParseTreeProperty<>();
+
     // push each line or a block of code into a stack, out_stream will store all extract info of each line
     public static Stack<ByteArrayOutputStream> stack_out_stream = new Stack<ByteArrayOutputStream>();
     public static ByteArrayOutputStream main_stream = new ByteArrayOutputStream();
@@ -67,15 +62,15 @@ class RyCompilerProxy {
         proxy.add(new RyProgListener());
         proxy.add(new RyExpressionListListener());
         proxy.add(new RyExpressionListener());
-        proxy.add(new RyDynamicListener());
-        proxy.add(new RyValueListener());
         proxy.add(new RyIntegerListener());
         proxy.add(new RyFloatListener());
         proxy.add(new RyStringListener());
+        proxy.add(new RyDynamicListener());
+        proxy.add(new RyValueListener());
         proxy.add(new RyCondListener());
         proxy.add(new RyFunctionListener());
 
-//        Evaluator eval = new Evaluator();
+        // Evaluator eval = new Evaluator();
         walker.walk(proxy, tree);
 
         // errors checking
@@ -179,7 +174,7 @@ class RyCompilerProxy {
     }
 
     public static String generateResultExpression(String leftVal, String operation, String rightVal) {
-        return leftVal + "." + operation + "(" + rightVal + ")";
+        return "${leftVal}.callmethod(${operation},${rightVal})";
     }
 
     public static void printToOutStream(String text) {
@@ -197,13 +192,13 @@ class RyCompilerProxy {
     public static void printToMainStream(String text) {
 //            ByteArrayOutputStream out = main_stream;
         PrintStream ps = new PrintStream(expression_stream);
-        ps.println(text);
+        ps.print(text);
 //            stack_out_stream.push(out);
     }
 
     public static void printToErrorStream(String text) {
         PrintStream ps = new PrintStream(error_stream);
-        ps.println(text);
+        ps.print(text);
     }
 
     public static int derieveParamNum(String params_expression) {

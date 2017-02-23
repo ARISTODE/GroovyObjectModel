@@ -14,7 +14,12 @@ class RyFloatListener extends RyBaseListener {
 
         switch(ctx.op.getType()) {
             case RyParser.ASSIGN:
-                float_assignment_expression = "Instance ${var} = ${float_result_expression};";
+                if (RyCompilerProxy.var_definition.contains(var)) {
+                    float_assignment_expression = "${var} = ${float_result_expression}";
+                } else {
+                    float_assignment_expression = "Instance ${var} = ${float_result_expression}";
+                    RyCompilerProxy.var_definition.add(var);
+                }
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());

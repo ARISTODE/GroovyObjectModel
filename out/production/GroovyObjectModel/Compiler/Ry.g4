@@ -41,7 +41,7 @@ return_statement: RETURN all_result;
 
 function_body: expression_list;
 
-function_name: id;
+function_name: var;
 
 function_params: LEFT_RBRACKET RIGHT_RBRACKET
                | LEFT_RBRACKET function_definition_param_list RIGHT_RBRACKET
@@ -52,7 +52,7 @@ function_definition_param_list: function_definition_param_id
                               | function_definition_param_list COMMA function_definition_param_id
                               ;
 
-function_definition_param_id: id;
+function_definition_param_id: var;
 
 // function call
 function_call: name=function_name LEFT_RBRACKET params=function_call_param_list RIGHT_RBRACKET
@@ -68,13 +68,13 @@ function_param: ( function_call_unnamed_param | function_call_named_param);
 
 function_call_unnamed_param: all_result;
 
-function_call_named_param: id op=ASSIGN all_result;
+function_call_named_param: var op=ASSIGN all_result;
 
 all_result : ( int_result | float_result | string_result | dynamic_result );
 
 while_statement : WHILE cond_expression crlf statement_body END;
 
-for_statement: FOR id IN LEFT_RBRACKET int_t DOTS int_t RIGHT_RBRACKET crlf statement_body END;
+for_statement: FOR var IN LEFT_RBRACKET int_t DOTS int_t RIGHT_RBRACKET crlf statement_body END;
 
 elsif_statement : if_elsif_statement;
 
@@ -138,7 +138,7 @@ dynamic_result : dynamic_result op=( MUL | DIV | MOD ) int_result
                | dynamic
                ;
 
-dynamic : id
+dynamic : var
         | function_call_assignment
         ;
 
@@ -176,7 +176,7 @@ comparison : left=comp_var op=( LESS | GREATER | LESS_EQUAL | GREATER_EQUAL ) ri
            ;
 
 comp_var : all_result
-         | id
+         | var
          ;
 
 lvalue : var
@@ -229,9 +229,6 @@ bool_t : TRUE
        ;
 
 nil_t : NIL;
-
-
-id : ID;
 
 terminator : terminator SEMICOLON
            | terminator crlf
