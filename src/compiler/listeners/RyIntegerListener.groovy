@@ -21,7 +21,7 @@ class RyIntegerListener extends RyBaseListener {
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                int_assignment_expression = "${var}.${assignOprText}(${int_result_expression});\n";
+                int_assignment_expression = "${var}.callmethod(\"assignOprText\",${int_result_expression})";
                 break;
         }
 

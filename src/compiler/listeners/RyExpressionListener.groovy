@@ -5,6 +5,12 @@ import compiler.RyBaseListener
 import compiler.RyParser
 
 class RyExpressionListener extends RyBaseListener{
+    public void enterExpression(RyParser.ExpressionContext ctx) {
+        String cls_name = RyCompilerProxy.class_definition.get(ctx.getParent());
+        // TopObject or other class
+        RyCompilerProxy.class_definition.put(ctx, cls_name);
+    }
+
     public void exitExpression(RyParser.ExpressionContext ctx) {
         // if the subexpression is a modifier
         if (ctx.cond_modifier != null) {
@@ -15,7 +21,7 @@ class RyExpressionListener extends RyBaseListener{
             RyCompilerProxy.node_expression.put(ctx, modifierExpr);
         }else {
             String child_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-            RyCompilerProxy.node_expression.put(ctx, child_expression);
+            RyCompilerProxy.node_expression.put(ctx, "${child_expression};");
         }
     }
 }

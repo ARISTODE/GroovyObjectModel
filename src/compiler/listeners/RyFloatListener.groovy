@@ -23,7 +23,7 @@ class RyFloatListener extends RyBaseListener {
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                float_assignment_expression = "${var}.${assignOprText}(${float_result_expression})\n";
+                float_assignment_expression = "${var}.callmethod(\"${assignOprText}\",${float_result_expression})";
                 break;
         }
 
@@ -36,35 +36,16 @@ class RyFloatListener extends RyBaseListener {
             String right_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
             String float_expression = RyCompilerProxy.generateResultExpression(left_expression, ctx.op.getText(), right_expression);
 
-            switch(ctx.op.getType()) {
-                case RyParser.PLUS:
-                    // store the type of this specific node
-                    RyCompilerProxy.value_store.put(ctx, "Float");
-                    break;
-                case RyParser.MINUS:
-                    RyCompilerProxy.value_store.put(ctx, "Float");
-                    break;
-                case RyParser.MUL:
-                    RyCompilerProxy.value_store.put(ctx, "Float");
-                    break;
-                case RyParser.DIV:
-                    RyCompilerProxy.value_store.put(ctx, "Float");
-                    break;
-                case RyParser.MOD:
-                    RyCompilerProxy.value_store.put(ctx, "Float");
-                    break;
-            }
             RyCompilerProxy.node_expression.put(ctx, float_expression);
         }
         else if (ctx.getChildCount() == 1) {
             String float_expression = "new Instance(Global._RyFloat, ${RyCompilerProxy.node_expression.get(ctx.getChild(0))})";
             RyCompilerProxy.node_expression.put(ctx, float_expression);
-            RyCompilerProxy.value_store.put(ctx, "Float");
         }
     }
 
     public void exitFloat_t(RyParser.Float_tContext ctx) {
         RyCompilerProxy.node_expression.put(ctx, ctx.FLOAT().getText());
-        RyCompilerProxy.value_store.put(ctx, RyCompilerProxy.value_store.get(ctx.getChild(0)));
+//        RyCompilerProxy.value_store.put(ctx, RyCompilerProxy.value_store.get(ctx.getChild(0)));
     }
 }

@@ -1,5 +1,6 @@
 package compiler.listeners
 
+import ObjectModel.Instance
 import compiler.RyCompilerProxy
 import compiler.RyBaseListener
 import compiler.RyParser
@@ -10,7 +11,7 @@ class RyDynamicListener extends RyBaseListener{
         String right_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
         String dynamic_assignment_expression = "";
 
-        if (ctx.op.getText().equals("=")) {
+        if (ctx.op.getText() == "=") {
             if (RyCompilerProxy.var_definition.contains(left_expression)) {
                 dynamic_assignment_expression = "${left_expression } = ${right_expression}";
             } else {
@@ -55,4 +56,8 @@ class RyDynamicListener extends RyBaseListener{
         RyCompilerProxy.node_expression.put(ctx, var_expression);
     }
 
+    public void exitVar_instance(RyParser.Var_instanceContext ctx) {
+        String var_instance = "class_var_${ctx.getChild(1)}";
+        RyCompilerProxy.node_expression.put(ctx,var_instance);
+    }
 }

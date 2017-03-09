@@ -23,7 +23,7 @@ class RyStringListener extends RyBaseListener{
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                string_assignment_expression = "${var}.callmethod(\"${assignOprText}\", ${string_result_expression})";
+                string_assignment_expression = "(Instance)${var}.callmethod(\"${assignOprText}\", ${string_result_expression})";
                 break;
         }
 
@@ -48,7 +48,7 @@ class RyStringListener extends RyBaseListener{
         }
         else if (ctx.getChildCount() == 1) {
             String literal_t_expr = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-            String string_expression = "new Instance(Global._RyString, \"${literal_t_expr}\")";
+            String string_expression = "new Instance(Global._RyString, ${literal_t_expr})";
             RyCompilerProxy.node_expression.put(ctx, string_expression);
         }
     }
@@ -57,6 +57,5 @@ class RyStringListener extends RyBaseListener{
         int str_len = ctx.LITERAL().getText().length();
 //        RyCompilerProxy.node_expression.put(ctx, ctx.LITERAL().getText().substring(1, str_len - 1));
         RyCompilerProxy.node_expression.put(ctx, ctx.LITERAL().getText());
-        RyCompilerProxy.value_store.put(ctx, RyCompilerProxy.value_store.get(ctx.getChild(0)));
     }
 }
