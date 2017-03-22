@@ -1,5 +1,4 @@
-// Generated from Ry.g4 by ANTLR 4.5
-package compiler;
+package compiler;// Generated from Ry.g4 by ANTLR 4.5
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -78,6 +77,16 @@ public interface RyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitClass_body(RyParser.Class_bodyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RyParser#object_definition}.
+	 * @param ctx the parse tree
+	 */
+	void enterObject_definition(RyParser.Object_definitionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RyParser#object_definition}.
+	 * @param ctx the parse tree
+	 */
+	void exitObject_definition(RyParser.Object_definitionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RyParser#function_definition}.
 	 * @param ctx the parse tree
@@ -168,6 +177,16 @@ public interface RyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFunction_call(RyParser.Function_callContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RyParser#class_function_call}.
+	 * @param ctx the parse tree
+	 */
+	void enterClass_function_call(RyParser.Class_function_callContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RyParser#class_function_call}.
+	 * @param ctx the parse tree
+	 */
+	void exitClass_function_call(RyParser.Class_function_callContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RyParser#function_call_param_list}.
 	 * @param ctx the parse tree

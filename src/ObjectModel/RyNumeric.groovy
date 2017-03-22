@@ -11,12 +11,12 @@ class RyNumeric {
 
         def ceil = {
             self, Object... args ->
-                return new Instance(Global._RyInteger, Math.ceil(self.default_val()));
+                return new Instance(ClassManager._RyInteger, Math.ceil(self.default_val()));
         };
 
         def floor = {
             self, Object... args ->
-                return new Instance(Global._RyInteger, Math.floor(self.default_val()));
+                return new Instance(ClassManager._RyInteger, Math.floor(self.default_val()));
         };
 
         def abs = {

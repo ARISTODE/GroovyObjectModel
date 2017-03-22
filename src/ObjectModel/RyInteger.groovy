@@ -6,8 +6,8 @@ class RyInteger {
     def static initialize() {
 
         def ceylon = {
-            self, Object... args ->
-                Integer self_val =(self.read_dic("__default__"));
+            Instance self, Object... args ->
+                Integer self_val = self.read_attr("__default__");
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
 
@@ -30,13 +30,13 @@ class RyInteger {
                 switch (cls_name) {
                     case "RyInteger":
                         int new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyInteger, new_val);
+                        return new Instance(ClassManager._RyInteger, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyString":
                         String new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyString, new_val);
+                        return new Instance(ClassManager._RyString, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${cls_name} arguments");
                         break;
@@ -52,10 +52,10 @@ class RyInteger {
                 switch (cls_name) {
                     case "RyInteger":
                         int new_val = self.default_val() - other.default_val();
-                        return new Instance(Global._RyInteger, new_val);
+                        return new Instance(ClassManager._RyInteger, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() - other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${cls_name} arguments");
                         break;
@@ -71,10 +71,10 @@ class RyInteger {
                 switch (cls_name) {
                     case "RyInteger":
                         int new_val = self.default_val() * other.default_val();
-                        return new Instance(Global._RyInteger, new_val);
+                        return new Instance(ClassManager._RyInteger, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() * other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Multiply Method cannot take a ${cls_name} arguments");
                         break;
@@ -91,10 +91,10 @@ class RyInteger {
                 switch (cls_name) {
                     case "RyInteger":
                         int new_val = self.default_val() / other.default_val();
-                        return new Instance(Global._RyInteger, new_val);
+                        return new Instance(ClassManager._RyInteger, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() / other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Multiply Method cannot take a ${cls_name} arguments");
                         break;
@@ -111,10 +111,10 @@ class RyInteger {
                 switch (cls_name) {
                     case "RyInteger":
                         int new_val = self.default_val() % other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, new_val);
                     case "RyFloat":
                         float new_val = self.default_val() % other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, new_val);
                     default:
                         throw new ArgumentTypeError("Module Method cannot take a ${arg_name} arguments");
                         break;
@@ -123,42 +123,42 @@ class RyInteger {
 
         def exponent = {
             self, Object... args ->
-                return new Instance(Global._RyInteger, Math.pow(self.default_val(), (Double)args[0]));
+                return new Instance(ClassManager._RyInteger, Math.pow(self.default_val(), (Double)args[0]));
         }
 
         def shift_left = {
             self, Object... args ->
                 Integer bits = (Integer)args[0];
-                return new Instance(Global._RyInteger, ((Instance)self).default_val() << bits);
+                return new Instance(ClassManager._RyInteger, ((Instance)self).default_val() << bits);
         }
 
         def shift_right = {
             self, Object... args ->
                 Integer bits = (Integer)args[0];
-                return new Instance(Global._RyInteger, ((Instance)self).default_val() >> bits);
+                return new Instance(ClassManager._RyInteger, ((Instance)self).default_val() >> bits);
         }
 
         def is_even = {
             self, Object... args ->
-                return ((Instance)self).default_val() % 2 == 0 ? new Instance(Global._RyTrueClass, true) : new Instance(Global._RyFalseClass, false);
+                return ((Instance)self).default_val() % 2 == 0 ? new Instance(ClassManager._RyTrueClass, true) : new Instance(ClassManager._RyFalseClass, false);
         }
 
         def is_odd = {
             self, Object... args ->
-                return ((Instance)self).default_val() % 2 != 0 ? new Instance(Global._RyTrueClass, true) : new Instance(Global._RyFalseClass, false);
+                return ((Instance)self).default_val() % 2 != 0 ? new Instance(ClassManager._RyTrueClass, true) : new Instance(ClassManager._RyFalseClass, false);
         }
 
         def to_s = {
             self, Object... args ->
                 String val = ((Instance)self).default_val().toString();
                 // return a new String object with the new value encapsulated
-                return new Instance(Global._RyString, val);
+                return new Instance(ClassManager._RyString, val);
         }
 
         def to_f = {
             self, Object... args ->
                 float val = ((Integer)((Instance)self).default_val()).toFloat();
-                return new Instance(Global._RyFloat, val);
+                return new Instance(ClassManager._RyFloat, val);
         }
 
         def cls_mth_map = [:];

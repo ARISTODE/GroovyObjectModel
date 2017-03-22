@@ -4,10 +4,11 @@ class A
   end
 
   def sayHello()
-    @a
+    return @a
   end
 end
 
-def fib(a,b)
-    return a+b
-end
+c = 5
+a = A.new(5)
+a.initialize(5)
+a.sayHello()

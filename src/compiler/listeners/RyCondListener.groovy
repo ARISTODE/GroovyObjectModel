@@ -68,12 +68,6 @@ class RyCondListener extends RyBaseListener {
         RyCompilerProxy.node_expression.put(ctx, comp_var_expression);
     }
 
-    public void exitAll_result(RyParser.All_resultContext ctx) {
-        String all_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-        RyCompilerProxy.node_expression.put(ctx, all_expression);
-    }
-
-
     // ================================  ElseIf statement  =====================================
     public void exitElsif_statement(RyParser.Elsif_statementContext ctx) {
         String elseif_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
@@ -163,19 +157,5 @@ class RyCondListener extends RyBaseListener {
         }
 
         RyCompilerProxy.node_expression.put(ctx, expression_list_expression);
-    }
-
-    public void exitExpression(RyParser.ExpressionContext ctx) {
-        // if the subexpression is a modifier
-        if (ctx.cond_modifier != null) {
-            String modifier = ctx.cond_modifier.getText();
-            String expression_to_eval = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-            String cond_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
-            String modifierExpr = String.format("%s (%s) {\n %s \n}", modifier, cond_expression, expression_to_eval);
-            RyCompilerProxy.node_expression.put(ctx, modifierExpr);
-        }else {
-            String child_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-            RyCompilerProxy.node_expression.put(ctx, child_expression);
-        }
     }
 }

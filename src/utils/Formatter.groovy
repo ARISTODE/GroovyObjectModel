@@ -11,6 +11,8 @@ class ${className} {
 
     public static String wrapExpressions(String sourceStr) {
     String wholeScript = """public static void main(String[] args) {
+        ClassManager class_manager = new ClassManager();
+        InstanceManager instance_manager = new InstanceManager(class_manager);
         ${sourceStr}
     }
     """

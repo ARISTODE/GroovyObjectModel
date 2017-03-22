@@ -12,9 +12,9 @@ class TrueClass {
 
                 switch (cls_name) {
                     case "ObjectModel.TrueClass":
-                        return new Instance(Global._RyTrueClass, true);
+                        return new Instance(ClassManager._RyTrueClass, true);
                     case "ObjectModel.FalseClass":
-                        return new Instance(Global._RyFalseClass, false);
+                        return new Instance(ClassManager._RyFalseClass, false);
                     default:
                         throw new ArgumentTypeError("and Method cannot take a ${cls_name} arguments");
                         break;
@@ -29,9 +29,9 @@ class TrueClass {
 
                 switch (cls_name) {
                     case "ObjectModel.TrueClass":
-                        return new Instance(Global._RyTrueClass, true);
+                        return new Instance(ClassManager._RyTrueClass, true);
                     case "ObjectModel.FalseClass":
-                        return new Instance(Global._RyTrueClass, true);
+                        return new Instance(ClassManager._RyTrueClass, true);
                     default:
                         throw new ArgumentTypeError("and Method cannot take a ${cls_name} arguments");
                         break;
@@ -40,7 +40,7 @@ class TrueClass {
 
         def to_s = {
             self, Object... args ->
-                return new Instance(Global._RyString, "true");
+                return new Instance(ClassManager._RyString, "true");
         }
 
         def cls_mth_map = [:];

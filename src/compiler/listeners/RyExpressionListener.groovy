@@ -21,7 +21,7 @@ class RyExpressionListener extends RyBaseListener{
             RyCompilerProxy.node_expression.put(ctx, modifierExpr);
         }else {
             String child_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-            RyCompilerProxy.node_expression.put(ctx, "${child_expression};");
+            RyCompilerProxy.node_expression.put(ctx, "${child_expression}");
         }
     }
 }

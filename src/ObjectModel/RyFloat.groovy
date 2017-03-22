@@ -31,13 +31,13 @@ class RyFloat {
                 switch (cls_name) {
                     case "RyInteger":
                         float new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyString":
                         String new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyString, new_val);
+                        return new Instance(ClassManager._RyString, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
                         break;
@@ -54,10 +54,10 @@ class RyFloat {
                 switch (cls_name) {
                     case "RyInteger":
                         float new_val = self.default_val() - other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() - other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
                         break;
@@ -74,10 +74,10 @@ class RyFloat {
                 switch (cls_name) {
                     case "RyInteger":
                         float new_val = self.default_val() * other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() * other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
                         break;
@@ -95,10 +95,10 @@ class RyFloat {
                 switch (cls_name) {
                     case "RyInteger":
                         float new_val = self.default_val() / other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() / other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
                         break;
@@ -115,10 +115,10 @@ class RyFloat {
                 switch (cls_name) {
                     case "RyInteger":
                         float new_val = self.default_val() % other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     case "RyFloat":
                         float new_val = self.default_val() % other.default_val();
-                        return new Instance(Global._RyFloat, new_val);
+                        return new Instance(ClassManager._RyFloat, ["__default__": new_val]);
                     default:
                         throw new ArgumentTypeError("Module Method cannot take a ${arg_name} arguments");
                         break;
@@ -128,7 +128,7 @@ class RyFloat {
         def to_i = {
             self, Object... args ->
                 Integer val = ((Float)((Instance)self).default_val()).toInteger();
-                return new Instance(Global._RyInteger, val);
+                return new Instance(ClassManager._RyInteger, ["__default__": val]);
         }
 
         def cls_mth_map = [:];

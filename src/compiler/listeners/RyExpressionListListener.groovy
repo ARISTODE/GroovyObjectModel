@@ -14,7 +14,7 @@ class RyExpressionListListener extends RyBaseListener{
             RyCompilerProxy.class_definition.put(ctx, cls_name);
         } else {
             // default write to the TopObject class
-            RyCompilerProxy.class_definition.put(ctx, "Global._TopObject");
+            RyCompilerProxy.class_definition.put(ctx, "TopObject");
         }
     }
 
@@ -26,10 +26,10 @@ class RyExpressionListListener extends RyBaseListener{
         while (expr_pointer < child_list_len - 2) {
             // concatenation
             String child_expression = RyCompilerProxy.node_expression.get(ctx.getChild(expr_pointer));
-            if (!child_expression.contains("static")) {
+//            if (!child_expression.contains("static")) {
                 // processing expressions
-                expression_list_expression.append("\t${child_expression}");
-            }
+            expression_list_expression.append("\t${child_expression}");
+//            }
             expr_pointer++;
         }
 

@@ -4,60 +4,60 @@ import ObjectModel.Instance
 import compiler.RyCompilerProxy
 import compiler.RyBaseListener
 import compiler.RyParser
+import org.antlr.v4.runtime.tree.ParseTree
 
 class RyDynamicListener extends RyBaseListener{
-    public void exitDynamic_assignment(RyParser.Dynamic_assignmentContext ctx) {
-        String left_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-        String right_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
-        String dynamic_assignment_expression = "";
 
-        if (ctx.op.getText() == "=") {
-            if (RyCompilerProxy.var_definition.contains(left_expression)) {
-                dynamic_assignment_expression = "${left_expression } = ${right_expression}";
-            } else {
-                dynamic_assignment_expression = "Instance ${left_expression } = ${right_expression}";
-                RyCompilerProxy.var_definition.add(left_expression);
-            }
-        } else {
-            String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
-            dynamic_assignment_expression = RyCompilerProxy.generateResultExpression(left_expression, opr_text,right_expression);
-        }
-
-        dynamic_assignment_expression += ";\n";
-        RyCompilerProxy.node_expression.put(ctx, dynamic_assignment_expression);
+    public void enterDynamic_result(RyParser.Dynamic_resultContext ctx) {
+        RyCompilerProxy.storeCls(ctx);
     }
 
     public void exitDynamic_result(RyParser.Dynamic_resultContext ctx) {
+        String cls_name = RyCompilerProxy.class_definition.get(ctx.getParent());
+
         if (ctx.getChildCount() == 3 && ctx.op != null) {
             String var = RyCompilerProxy.node_expression.get(ctx.getChild(0));
             String dynamic_result_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
-
             String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
             String id_expression = RyCompilerProxy.generateResultExpression(var, opr_text, dynamic_result_expression);
             RyCompilerProxy.node_expression.put(ctx, id_expression);
         }
         else if (ctx.getChildCount() == 1) {
-            String id_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
+            String var = RyCompilerProxy.node_expression.get(ctx.getChild(0));
+            String id_expression = "";
+            if (cls_name != "TopObject") {
+                id_expression = var;
+            } else {
+                id_expression = "instance_manager.getInstance(\"${var}\")";
+            }
             RyCompilerProxy.node_expression.put(ctx, id_expression);
         }
     }
 
     public void exitDynamic(RyParser.DynamicContext ctx) {
-        String id_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-        if (ctx.getChild(0) instanceof RyParser.Function_call_assignmentContext) {
-            // if is function call, strip the last char
-            id_expression = id_expression.substring(0, id_expression.length() - 2);
-        }
+        String id_expression = ctx.var_id.getText();
         RyCompilerProxy.node_expression.put(ctx, id_expression);
     }
 
+    public void enterAll_result(RyParser.All_resultContext ctx) {
+        String cls_name = RyCompilerProxy.class_definition.get(ctx.getParent());
+        RyCompilerProxy.class_definition.put(ctx, cls_name);
+    }
+
+    public void exitAll_result(RyParser.All_resultContext ctx) {
+        // logic here is to getting out the default generated expression of dynamic result
+        String all_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
+        RyCompilerProxy.node_expression.put(ctx, all_expression);
+    }
+
     public void exitVar(RyParser.VarContext ctx) {
-        String var_expression = ctx.ID().getText();
+        String var_text = ctx.ID().getText();
+        String var_expression = "instance_manager.get(\"${var_text}\")";
         RyCompilerProxy.node_expression.put(ctx, var_expression);
     }
 
     public void exitVar_instance(RyParser.Var_instanceContext ctx) {
-        String var_instance = "class_var_${ctx.getChild(1)}";
+        String var_instance = "${ctx.getChild(0)}${ctx.getChild(1)}";
         RyCompilerProxy.node_expression.put(ctx,var_instance);
     }
 }

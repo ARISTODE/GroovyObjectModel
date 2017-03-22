@@ -4,6 +4,7 @@ import compiler.listeners.*
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.RuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.ParseTreeProperty
 import org.antlr.v4.runtime.tree.ParseTreeWalker
@@ -15,8 +16,6 @@ class RyCompilerProxy {
 
     // used to store node's expression
     public static ParseTreeProperty<String> node_expression = new ParseTreeProperty<String>();
-    // check for variable definition repetition
-    public static ArrayList<String> var_definition = new ArrayList<>();
     // map used to store function params list
     // map used to store class name with nodes
     public static ParseTreeProperty<String> class_definition = new ParseTreeProperty<>();
@@ -73,6 +72,7 @@ class RyCompilerProxy {
         proxy.add(new RyCondListener());
         proxy.add(new RyFunctionListener());
         proxy.add(new RyClassListener());
+        proxy.add(new RyAssignmentListener());
 
         // Evaluator eval = new Evaluator();
         walker.walk(proxy, tree);
@@ -89,11 +89,11 @@ class RyCompilerProxy {
         ByteArrayOutputStream out_expressions = stack_out_stream.pop();
         ByteArrayOutputStream out_class = stack_out_stream.pop();
 //         put code into file
-        String filename = "${currentDir}/src/${genName}.java";
+        String filename = "${currentDir}/src/${genName}.groovy";
         File file = new File(filename);
 
-        String runtime_filename = "${currentDir}/src/ObjectModel/Userdefine.groovy"
-        File func_file = new File(runtime_filename);
+//        String runtime_filename = "${currentDir}/src/ObjectModel/Userdefine.groovy"
+//        File func_file = new File(runtime_filename);
 
         String dependencies = """
 import ObjectModel.*;
@@ -102,18 +102,20 @@ import ObjectModel.*;
         String code_body = Formatter.wrapClass(Formatter.wrapExpressions(out_expressions.toString()), genName);
         String whole_script = "${dependencies}${code_body}"
 
-//        file.setText(whole_script)
+        // write content to specific file
+        file.setText(whole_script)
 //        func_file.setText(Formatter.wrapFunctions(out_function.toString()));
+
         println("----------------------------debug--------------------------")
         // TODO: debug cursor
         println(whole_script);
         println("----------------------------debug--------------------------")
 
 
-        println("----------------------------debug--------------------------")
-        // TODO: debug cursor
-        println(Formatter.wrapFunctions(out_function.toString(), out_class.toString()));
-        println("----------------------------debug--------------------------")
+//        println("----------------------------debug--------------------------")
+//        // TODO: debug cursor
+//        println(Formatter.wrapFunctions(out_function.toString(), out_class.toString()));
+//        println("----------------------------debug--------------------------")
 
     }
 
@@ -196,7 +198,7 @@ import ObjectModel.*;
     }
 
     public static String generateResultExpression(String leftVal, String operation, String rightVal) {
-        return "(Instance)${leftVal}.callmethod(\"${operation}\",${rightVal})";
+        return "${leftVal}.callmethod(\"${operation}\",${rightVal})";
     }
 
     public static void printToOutStream(String text) {
@@ -230,8 +232,13 @@ import ObjectModel.*;
     }
 
     // write a method to the class according to the class definiton
-    public static String write_cls_func(cls_name="Global._TopObject", func_expr) {
+    public static String write_cls_func(cls_name="TopObject", func_expr) {
         // write function directly to the cls_method map
-        return "${cls_name}.write_attr(${func_expr})"
+        return "class_manager.getCls(\"${cls_name}\").write_attr(${func_expr})"
+    }
+
+    public static void storeCls(RuleContext ctx) {
+        String cls_name = class_definition.get(ctx.getParent());
+        class_definition.put(ctx, cls_name);
     }
 }

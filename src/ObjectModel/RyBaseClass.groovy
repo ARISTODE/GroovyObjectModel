@@ -1,13 +1,15 @@
 package ObjectModel
 
+import RuntimeExceptions.MethodMissingException
+
 class RyBaseClass extends Base{
     String name;
     RyBaseClass base_class;
 
-    RyBaseClass(String cls_name, fields, RyBaseClass meta_cls, RyBaseClass base_ryclass) {
+    RyBaseClass(String cls_name, fields, RyBaseClass meta_cls, RyBaseClass base_class) {
         super(meta_cls, fields);
         this.name = cls_name;
-        this.base_class = base_ryclass;
+        this.base_class = base_class;
     }
 
     def name() {
@@ -45,6 +47,6 @@ class RyBaseClass extends Base{
                 return cls._fields[mthname];
             }
         }
-        return Global.MISSING;
+        throw new MethodMissingException("No such method exist in the class! ");
     }
 }

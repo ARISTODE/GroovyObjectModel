@@ -11,18 +11,25 @@ class Base {
 
     def read_attr(String fieldname) {
         def res = this.read_dic(fieldname);
+        // at instance level also check the method call since instance can has its' own method(singleton)
         if (res != null) {
-            return res;
+            if (is_method(res)) {
+                return _make_bound_method(this, res);
+            } else {
+                return res;
+            }
         }
 
+        // if not found in the object's field, then go find the field in its' class
         res = this.cls._read_from_cls(fieldname);
-        if (is_method(res)) {
-            return _make_bound_method(this, res);
+        if (res != null) {
+            if (is_method(res)) {
+                return _make_bound_method(this, res);
+            } else {
+                return res;
+            }
         }
 
-        if (res != null) {
-            return res;
-        }
         return null;
     }
 
@@ -31,7 +38,7 @@ class Base {
     }
 
     def read_dic(String fieldname) {
-        return this._fields.get(fieldname);
+        return _fields.get(fieldname);
     }
 
     def write_dic(String filedname, value) {

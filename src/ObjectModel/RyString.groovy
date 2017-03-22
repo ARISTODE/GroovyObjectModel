@@ -41,13 +41,13 @@ class RyString {
                 switch (cls_name) {
                     case "RyInteger":
                         String new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyString, new_val);
+                        return new Instance(ClassManager._RyString, new_val);
                     case "RyFloat":
                         String new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyString, new_val);
+                        return new Instance(ClassManager._RyString, new_val);
                     case "RyString":
                         String new_val = self.default_val() + other.default_val();
-                        return new Instance(Global._RyString, new_val);
+                        return new Instance(ClassManager._RyString, new_val);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
                         break;
@@ -73,7 +73,7 @@ class RyString {
                         }
 
                         String new_val = sb.toString();
-                        return new Instance(Global._RyInteger, new_val);
+                        return new Instance(ClassManager._RyInteger, new_val);
                     default:
                         throw new ArgumentTypeError("Minus Method cannot take a ${arg_name} arguments");
                         break;
@@ -82,7 +82,7 @@ class RyString {
 
         def length = {
             self, Object... args ->
-                return new Instance(Global._RyInteger, self.read_dic("__default__").length());
+                return new Instance(ClassManager._RyInteger, self.read_dic("__default__").length());
         }
 
         def concat = {
@@ -90,66 +90,66 @@ class RyString {
                 String other = ((Instance)args[0]).read_dic("__default__");
                 String new_val = self.read_dic("__default__") + other;
                 self.write_attr("__default__", new_val);
-                return new Instance(Global._RyString, new_val);
+                return new Instance(ClassManager._RyString, new_val);
         }
 
         def capitalize = {
             self, Object... args ->
-                return new Instance(Global._RyString, self.read_dic("__default__").capitalize());
+                return new Instance(ClassManager._RyString, self.read_dic("__default__").capitalize());
         }
 
         def capitalize_change = {
             self, Object... args ->
                 def new_val = self.read_dic("__default__").capitalize();
                 self.write_attr("__default__", new_val);
-                return new Instance(Global._RyString, new_val);
+                return new Instance(ClassManager._RyString, new_val);
         }
 
         def upcase = {
             self, Object... args ->
-                return new Instance(Global._RyString, self.read_dic("__default__").toUpperCase());
+                return new Instance(ClassManager._RyString, self.read_dic("__default__").toUpperCase());
         }
 
         def upcase_change = {
             self, Object... args ->
                 def new_val = self.read_dic("__default__").toUpperCase();
                 self.write_attr("__default__", new_val);
-                return new Instance(Global._RyString, new_val);
+                return new Instance(ClassManager._RyString, new_val);
         }
 
         def downcase = {
             self, Object... args ->
-                return new Instance(Global._RyString, self.read_dic("__default__").toLowerCase());
+                return new Instance(ClassManager._RyString, self.read_dic("__default__").toLowerCase());
         }
 
         def downcase_change = {
             self, Object... args ->
                 def new_val = self.read_dic("__default__").toLowerCase();
                 self.write_attr("__default__", new_val);
-                return new Instance(Global._RyString, new_val);
+                return new Instance(ClassManager._RyString, new_val);
         }
 
 
         def getChar = {
             self, Object... args ->
-                return new Instance(Global._RyString, self.read_dic("__default__").charAt((Integer)args[0]));
+                return new Instance(ClassManager._RyString, self.read_dic("__default__").charAt((Integer)args[0]));
         }
 
         def chop = {
             self, Object... args ->
-                return new Instance(Global._RyString, self.read_dic("__default__")[0..-2]);
+                return new Instance(ClassManager._RyString, self.read_dic("__default__")[0..-2]);
         }
 
         def chop_change = {
             self, Object... args ->
                 def new_val = self.read_dic("__default__")[0..-2];
                 self.write_dic("__default__", new_val);
-                return new Instance(Global._RyString, new_val);
+                return new Instance(ClassManager._RyString, new_val);
         }
 
         def empty = {
             self, Object... args ->
-                return self.read_dic("__default__") == "" ? new Instance(Global._RyTrueClass, true) : new Instance(Global._RyFalseClass, false);
+                return self.read_dic("__default__") == "" ? new Instance(ClassManager._RyTrueClass, true) : new Instance(ClassManager._RyFalseClass, false);
         }
 
         def insert = {
@@ -160,7 +160,7 @@ class RyString {
                 String val = self.default_val();
                 String new_val = val.substring(0, index) + stub + val.substring(index, val.length());
                 self.write_dic("__default__", new_val);
-                return new Instance(Global._RyString, new_val);
+                return new Instance(ClassManager._RyString, new_val);
         }
 
         def cls_mth_map = [:];
