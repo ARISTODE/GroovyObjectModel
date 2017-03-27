@@ -27,11 +27,15 @@ class InstanceManager {
         return instance_map.get(ins_name);
     }
 
-    public String self_name() {
+    public String current_obj_name() {
         return self;
     }
 
     public Instance current_obj() {
         return getInstance(self);
+    }
+
+    public void setCurrentObj(String name) {
+        this.self = name;
     }
 }

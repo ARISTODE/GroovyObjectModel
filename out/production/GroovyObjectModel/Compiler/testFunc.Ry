@@ -1,0 +1,11 @@
+a = 5
+b = 6
+
+def fib(a,b)
+  c = a + b
+  c = c - 1
+  return c
+end
+
+
+fib(a,b)

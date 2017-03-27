@@ -10,6 +10,7 @@ expression_list : expression terminator
 expression : class_definition
            | function_definition
            | function_call
+           | class_function_call
            | for_statement
            | while_statement
            | if_statement
@@ -30,6 +31,11 @@ class_definition : CLASS class_name ('<' class_name)? CRLF class_body CRLF? END;
 class_name: constant;
 class_body: expression_list;
 
+// object definition
+object_definition: class_name '.' NEW LEFT_RBRACKET function_call_params RIGHT_RBRACKET
+                 | class_name '.' NEW LEFT_RBRACKET? RIGHT_RBRACKET?;
+
+
 //  function definitions
 function_definition : function_header function_body END;
 
@@ -41,7 +47,7 @@ return_statement: RETURN all_result;
 
 function_body: expression_list;
 
-function_name: var;
+function_name: func_name=var;
 
 function_params: LEFT_RBRACKET RIGHT_RBRACKET
                | LEFT_RBRACKET function_definition_param_list RIGHT_RBRACKET
@@ -52,13 +58,18 @@ function_definition_param_list: function_definition_param_id
                               | function_definition_param_list COMMA function_definition_param_id
                               ;
 
-function_definition_param_id: var;
+function_definition_param_id: id_name=var;
 
 // function call
 function_call: name=function_name LEFT_RBRACKET params=function_call_param_list RIGHT_RBRACKET
              | name=function_name params=function_call_param_list
              | name=function_name LEFT_RBRACKET RIGHT_RBRACKET
              ;
+
+// class method call
+class_function_call: (class_name | var) '.' name=function_name LEFT_RBRACKET params=function_call_param_list RIGHT_RBRACKET
+                   | (class_name | var) '.' name=function_name LEFT_RBRACKET? RIGHT_RBRACKET?;
+
 function_call_param_list: function_call_params;
 
 function_call_params: function_param
@@ -70,7 +81,7 @@ function_call_unnamed_param: all_result;
 
 function_call_named_param: var op=ASSIGN all_result;
 
-all_result : ( int_result | float_result | string_result | dynamic_result );
+all_result : ( int_result | float_result | string_result | dynamic_result | lvalue);
 
 while_statement : WHILE cond_expression crlf statement_body END;
 
@@ -138,7 +149,7 @@ dynamic_result : dynamic_result op=( MUL | DIV | MOD ) int_result
                | dynamic
                ;
 
-dynamic : var
+dynamic : var_id=var
         | function_call_assignment
         ;
 
@@ -186,11 +197,11 @@ lvalue : var
        | constant
        ;
 
-rvalue : lvalue
-       | int_result
+rvalue : int_result
        | float_result
        | string_result
        | dynamic_assignment
+       | lvalue
        | string_assignment
        | float_assignment
        | int_assignment
@@ -215,6 +226,7 @@ rvalue : lvalue
        | rvalue ( OR | AND ) rvalue
 
        | LEFT_RBRACKET rvalue RIGHT_RBRACKET
+       | object_definition
        ;
 
 
@@ -308,6 +320,7 @@ RIGHT_SBRACKET : ']';
 
 NIL : 'nil';
 RETURN: 'return';
+NEW: 'new';
 
 SL_COMMENT : ('#' ~('\r' | '\n')* '\n') -> skip;
 ML_COMMENT : ('=begin' .*? '=end\n') -> skip;

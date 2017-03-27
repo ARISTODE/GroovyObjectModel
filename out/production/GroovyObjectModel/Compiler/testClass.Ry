@@ -1,0 +1,14 @@
+class A
+  def initialize(a)
+    @a = a
+  end
+
+  def sayHello()
+    return @a
+  end
+end
+
+c = 5
+a = A.new(5)
+a.initialize(5)
+a.sayHello()

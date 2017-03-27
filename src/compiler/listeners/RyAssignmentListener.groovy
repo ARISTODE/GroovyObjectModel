@@ -11,8 +11,9 @@ class RyAssignmentListener extends RyBaseListener{
         String right_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
         String assignment_expression = "";
 
+        // normal situaion
         if (ctx.op.getText() == "=") {
-            assignment_expression = "instance_manager.addInstance(\"${var }\", ${right_expression})";
+            assignment_expression = "instance_manager.current_obj().write_attr(\"${var }\", ${right_expression})";
         } else {
             String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
             // for + - * /
@@ -45,7 +46,7 @@ class RyAssignmentListener extends RyBaseListener{
         } else {
             // just in the TopObject context
             if (ctx.op.getText() == "=") {
-                dynamic_assignment_expression = "instance_manager.addInstance(\"${var }\", ${right_expression})";
+                dynamic_assignment_expression = "instance_manager.current_obj().write_attr(\"${var }\", ${right_expression})";
                 // TODO: add + - * /
             } else {
                 String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
@@ -65,11 +66,11 @@ class RyAssignmentListener extends RyBaseListener{
 
         switch(ctx.op.getType()) {
             case RyParser.ASSIGN:
-                float_assignment_expression = "instance_manager.addInstance(\"${var}\", ${float_result_expression})";
+                float_assignment_expression = "instance_manager.current_obj().write_attr(\"${var}\", ${float_result_expression})";
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                float_assignment_expression = "instance_manager.getInstance(\"${var}\").callmethod(\"${assignOprText}\",${float_result_expression})";
+                float_assignment_expression = "instance_manager.current_obj().read_attr(\"${var}\").callmethod(\"${assignOprText}\",${float_result_expression})";
                 break;
         }
 
@@ -83,11 +84,11 @@ class RyAssignmentListener extends RyBaseListener{
 
         switch(ctx.op.getType()) {
             case RyParser.ASSIGN:
-                int_assignment_expression = "instance_manager.addInstance(\"${var}\", ${int_result_expression})";
+                int_assignment_expression = "instance_manager.current_obj().write_attr(\"${var}\", ${int_result_expression})";
                 break;
             default:
                 String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                int_assignment_expression = "instance_manager.getInstance(\"${var}\").callmethod(\"${assignOprText}\",${int_result_expression})";
+                int_assignment_expression = "instance_manager.current_obj().read_attr(\"${var}\").callmethod(\"${assignOprText}\",${int_result_expression})";
                 break;
         }
 

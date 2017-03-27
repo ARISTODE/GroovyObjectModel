@@ -227,7 +227,7 @@ class RyFunctionListener extends RyBaseListener {
                 ((RyParser.VarContext)ctx.getChild(0)).ID().getText() :
                 ((RyParser.Class_nameContext)ctx.getChild(0)).constant().getText();
 
-        String manager = ctx.getChild(0) instanceof RyParser.VarContext ? "instance_manager.getInstance(\"${caller_name}\")" : "class_manager.getCls(\"${caller_name}\")";
+        String manager = ctx.getChild(0) instanceof RyParser.VarContext ? "instance_manager.current_obj().(\"${caller_name}\")" : "class_manager.getCls(\"${caller_name}\")";
         String func_name = ctx.function_name().getText();
 
         // TODO: consider the case that carrying brackets

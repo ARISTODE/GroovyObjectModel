@@ -5,7 +5,7 @@ import compiler.RyCompilerProxy
 import compiler.RyParser
 
 class RyIntegerListener extends RyBaseListener {
-
+    // 5 -> new Instance(class_manager.getCls("RyInteger"), ["__default__": 5]);
     public void exitInt_result(RyParser.Int_resultContext ctx) {
         if (ctx.getChildCount() == 3 && ctx.op != null) {
             String left_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));

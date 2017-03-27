@@ -103,7 +103,7 @@ import ObjectModel.*;
         String whole_script = "${dependencies}${code_body}"
 
         // write content to specific file
-        file.setText(whole_script)
+//        file.setText(whole_script)
 //        func_file.setText(Formatter.wrapFunctions(out_function.toString()));
 
         println("----------------------------debug--------------------------")
