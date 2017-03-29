@@ -6,9 +6,7 @@ import compiler.RyParser
 
 class RyExpressionListener extends RyBaseListener{
     public void enterExpression(RyParser.ExpressionContext ctx) {
-        String cls_name = RyCompilerProxy.class_definition.get(ctx.getParent());
-        // TopObject or other class
-        RyCompilerProxy.class_definition.put(ctx, cls_name);
+        RyCompilerProxy.storeNodeCompileInfo(ctx);
     }
 
     public void exitExpression(RyParser.ExpressionContext ctx) {

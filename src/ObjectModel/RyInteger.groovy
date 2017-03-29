@@ -4,7 +4,6 @@ import RuntimeExceptions.ArgumentTypeError
 
 class RyInteger {
     def static initialize() {
-
         def ceylon = {
             Instance self, Object... args ->
                 Integer self_val = self.read_attr("__default__");

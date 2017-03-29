@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.tree.ParseTree
 class RyDynamicListener extends RyBaseListener{
 
     public void enterDynamic_result(RyParser.Dynamic_resultContext ctx) {
-        RyCompilerProxy.storeCls(ctx);
+        RyCompilerProxy.storeNodeCompileInfo(ctx);
     }
 
     public void exitDynamic_result(RyParser.Dynamic_resultContext ctx) {
@@ -34,30 +34,22 @@ class RyDynamicListener extends RyBaseListener{
         }
     }
 
+    public void enterDynamic(RyParser.DynamicContext ctx) {
+        RyCompilerProxy.storeNodeCompileInfo(ctx);
+    }
+
     public void exitDynamic(RyParser.DynamicContext ctx) {
         String id_expression = ctx.var_id.getText();
         RyCompilerProxy.node_expression.put(ctx, id_expression);
     }
 
     public void enterAll_result(RyParser.All_resultContext ctx) {
-        String cls_name = RyCompilerProxy.class_definition.get(ctx.getParent());
-        RyCompilerProxy.class_definition.put(ctx, cls_name);
+       RyCompilerProxy.storeNodeCompileInfo(ctx);
     }
 
     public void exitAll_result(RyParser.All_resultContext ctx) {
         // logic here is to getting out the default generated expression of dynamic result
         String all_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
         RyCompilerProxy.node_expression.put(ctx, all_expression);
-    }
-
-    public void exitVar(RyParser.VarContext ctx) {
-        String var_text = ctx.ID().getText();
-        String var_expression = "instance_manager.get(\"${var_text}\")";
-        RyCompilerProxy.node_expression.put(ctx, var_expression);
-    }
-
-    public void exitVar_instance(RyParser.Var_instanceContext ctx) {
-        String var_instance = "${ctx.getChild(0)}${ctx.getChild(1)}";
-        RyCompilerProxy.node_expression.put(ctx,var_instance);
     }
 }

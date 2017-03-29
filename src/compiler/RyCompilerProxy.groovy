@@ -22,6 +22,7 @@ class RyCompilerProxy {
     public static HashMap<String, Integer> function_definition = new HashMap<>();
     public static ParseTreeProperty<Integer> function_param_number = new ParseTreeProperty<>();
 
+    public static ParseTreeProperty<HashMap<String,String>> node_compile_info = new ParseTreeProperty<HashMap<String, String>>();
 
     // push each line or a block of code into a stack, out_stream will store all extract info of each line
     public static Stack<ByteArrayOutputStream> stack_out_stream = new Stack<ByteArrayOutputStream>();
@@ -231,14 +232,19 @@ import ObjectModel.*;
         return param_list.length;
     }
 
-    // write a method to the class according to the class definiton
+    // write a method to the class according to the class definition
     public static String write_cls_func(cls_name="TopObject", func_expr) {
         // write function directly to the cls_method map
         return "class_manager.getCls(\"${cls_name}\").write_attr(${func_expr})"
     }
 
-    public static void storeCls(RuleContext ctx) {
-        String cls_name = class_definition.get(ctx.getParent());
-        class_definition.put(ctx, cls_name);
+    public static void storeNodeCompileInfo(RuleContext ctx) {
+        HashMap<String, String> old_node_info = node_compile_info.get(ctx.getParent());
+        node_compile_info.put(ctx, old_node_info);
     }
+
+    public static void updateNodeCompileInfo(RuleContext ctx, HashMap<String, String> update_info) {
+        node_compile_info.put(ctx, update_info);
+    }
+
 }

@@ -8,17 +8,22 @@ import org.antlr.v4.runtime.tree.ParseTree
 class RyExpressionListListener extends RyBaseListener{
     public void enterExpression_list(RyParser.Expression_listContext ctx) {
         // get the class name (default -> _TopObject)
-        String cls_name = RyCompilerProxy.class_definition.get(ctx.getParent());
-        if (cls_name != null) {
-            // use the class name in child expression
-            RyCompilerProxy.class_definition.put(ctx, cls_name);
+        def node_info = RyCompilerProxy.node_compile_info.get(ctx.getParent());
+        if (node_info != null) {
+            RyCompilerProxy.node_compile_info.put(ctx, node_info);
         } else {
-            // default write to the TopObject class
-            RyCompilerProxy.class_definition.put(ctx, "TopObject");
+            // store the information of class and the current scoping
+            RyCompilerProxy.node_compile_info.put(ctx, [
+                    "class": "TopObject",
+                    "scope": "main"
+            ]);
         }
     }
 
     public void exitExpression_list(RyParser.Expression_listContext ctx) {
+        /* expression list won't use the node compile info itself, but the children of it will alter the datum
+           according to the information given by expression list
+        */
         int child_list_len = ctx.getChildCount() - 1;  // -- eliminate terminator
         StringBuilder expression_list_expression = new StringBuilder();
 

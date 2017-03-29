@@ -1,4 +1,7 @@
-package compiler.listeners;
+package compiler.listeners
+
+import compiler.RyCompilerProxy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +48,7 @@ public class ProxyParseTreeListener implements ParseTreeListener {
 
     @Override
     public void enterEveryRule( ParserRuleContext ctx ) {
+        // also passing the node information by each node
         for( ParseTreeListener listener : getListeners() ) {
             listener.enterEveryRule( ctx );
             ctx.enterRule( listener );
