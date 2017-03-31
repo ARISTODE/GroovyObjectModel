@@ -38,16 +38,6 @@ public interface RyListener extends ParseTreeListener {
 	 */
 	void exitExpression(RyParser.ExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RyParser#puts_call}.
-	 * @param ctx the parse tree
-	 */
-	void enterPuts_call(RyParser.Puts_callContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link RyParser#puts_call}.
-	 * @param ctx the parse tree
-	 */
-	void exitPuts_call(RyParser.Puts_callContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link RyParser#class_definition}.
 	 * @param ctx the parse tree
 	 */
@@ -637,14 +627,4 @@ public interface RyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConstant(RyParser.ConstantContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link RyParser#puts}.
-	 * @param ctx the parse tree
-	 */
-	void enterPuts(RyParser.PutsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link RyParser#puts}.
-	 * @param ctx the parse tree
-	 */
-	void exitPuts(RyParser.PutsContext ctx);
 }

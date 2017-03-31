@@ -20,12 +20,7 @@ expression : class_definition
            | comparison_list
            | rvalue
            | return_statement
-           | puts_call
            ;
-
-puts_call: puts function_call
-         | puts rvalue
-         ;
 
 class_definition : CLASS class_name ('<' class_name)? CRLF class_body CRLF? END;
 class_name: constant;
@@ -81,7 +76,7 @@ function_call_unnamed_param: all_result;
 
 function_call_named_param: var op=ASSIGN all_result;
 
-all_result : ( int_result | float_result | string_result | dynamic_result | lvalue);
+all_result : ( int_result | float_result | string_result | dynamic_result | lvalue | class_function_call);
 
 while_statement : WHILE cond_expression crlf statement_body END;
 
@@ -330,6 +325,3 @@ INT : [0-9]+;
 FLOAT : [0-9]*'.'[0-9]+;
 CONSTANT: [A-Z_]+[a-zA-Z]*;
 ID : [a-zA-Z_][a-zA-Z0-9_]*;
-
-
-puts: 'puts';

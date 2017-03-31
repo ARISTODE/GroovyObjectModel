@@ -3,8 +3,6 @@ package compiler.listeners
 import compiler.RyCompilerProxy
 import compiler.RyBaseListener
 import compiler.RyParser
-import org.antlr.v4.runtime.tree.ParseTree
-
 
 class RyFunctionListener extends RyBaseListener {
     public void enterFunction_definition(RyParser.Function_definitionContext ctx) {
@@ -22,10 +20,6 @@ class RyFunctionListener extends RyBaseListener {
 
         String write_function_definition = RyCompilerProxy.write_cls_func(class_name, function_definition_expression);
 
-        // TODO: add initialize method
-        // checking the hooking methods
-        String func_name = RyCompilerProxy.node_expression.get(ctx.getChild(0).getChild(1));
-
         // cls_name is TopObject by default
         RyCompilerProxy.node_expression.put(ctx, write_function_definition);
     }
@@ -38,21 +32,18 @@ class RyFunctionListener extends RyBaseListener {
     public void exitFunction_header(RyParser.Function_headerContext ctx) {
         String function_header_expression = "";
         String function_name = RyCompilerProxy.node_expression.get(ctx.getChild(1));
-        int param_amount = 0;
+
         // if has params
         if (ctx.getChild(2).getText().length() > 2) {
-            String function_params_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
-                function_header_expression = "\"${function_name}\", { \n self, Object... args -> \n self = (Instance)self; \n ${function_params_expression} \n"; // do parameter type casting
+                String function_params_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
+                function_header_expression = "\"${function_name}\", { \n Instance self, Object... args -> \n current_obj = self; \n ${function_params_expression} \n"; // do parameter type casting
         } else {
-                function_header_expression = "\"${function_name}\", { \n self, Object... args -> \n" +
-                        " self = (Instance)self; \n";
+                function_header_expression = "\"${function_name}\", { \n Instance self, Object... args -> \n" +
+                        "current_obj = self;";
         }
 
         // record function definition, since the function params also store the information of params' length, so
-        // retrieve the length of params from there
-        RyCompilerProxy.function_definition.put(function_name, RyCompilerProxy.function_definition.get(ctx.getChild(2)));
         RyCompilerProxy.node_expression.put(ctx, function_header_expression);
-
         // pass child node compile info to the parent node, child function name store new scope info
         RyCompilerProxy.updateNodeCompileInfo(ctx.getParent(), RyCompilerProxy.node_compile_info.get(ctx));
     }
@@ -61,15 +52,17 @@ class RyFunctionListener extends RyBaseListener {
         HashMap<String, String> old_val = RyCompilerProxy.node_compile_info.get(ctx.getParent());
         String function_name = ctx.var().getText();
 
+
         // store scope info and class to the parent node function header
         HashMap<String, String> new_node_info = ["class": old_val["class"], "scope": function_name];
         // change parent scope name
         RyCompilerProxy.updateNodeCompileInfo(ctx.getParent(), new_node_info);
+        // store info of the current node(func_name)
         RyCompilerProxy.updateNodeCompileInfo(ctx, new_node_info);
     }
 
     public void exitFunction_name(RyParser.Function_nameContext ctx) {
-        String function_name_expression = ctx.func_name.getText();
+        String function_name_expression = ctx.var().getText();
         RyCompilerProxy.node_expression.put(ctx, function_name_expression);
     }
 
@@ -78,8 +71,13 @@ class RyFunctionListener extends RyBaseListener {
     }
 
     public void exitFunction_params(RyParser.Function_paramsContext ctx) {
+        HashMap<String, String> node_info = RyCompilerProxy.node_compile_info.get(ctx);
+        String func_name = node_info["scope"]; // retriving the scope as the function name
+
         String all_params_expression = RyCompilerProxy.node_expression.get(ctx.getChild(1));
         StringBuilder sb = new StringBuilder();
+
+        // splitting the params and counting the number of params
         String[] params;
         if (all_params_expression != null) {
             params = all_params_expression.split(",");
@@ -91,7 +89,7 @@ class RyFunctionListener extends RyBaseListener {
         }
 
         // store the length of params here
-        RyCompilerProxy.function_definition.put(ctx, params.length);
+        RyCompilerProxy.function_definition_param_number.put(func_name, params.length);
         RyCompilerProxy.node_expression.put(ctx, sb.toString());
     }
 
@@ -102,6 +100,7 @@ class RyFunctionListener extends RyBaseListener {
     public void exitFunction_definition_param_list(RyParser.Function_definition_param_listContext ctx) {
         int child_count = ctx.getChildCount();
         String all_param_expression = "";
+
         if (child_count == 1) {
             all_param_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
         } else {
@@ -115,6 +114,7 @@ class RyFunctionListener extends RyBaseListener {
                 }
             }
         }
+
 
         RyCompilerProxy.node_expression.put(ctx, all_param_expression);
     }
@@ -139,7 +139,8 @@ class RyFunctionListener extends RyBaseListener {
 
     public void enterReturn_statement(RyParser.Return_statementContext ctx) {
         RyCompilerProxy.storeNodeCompileInfo(ctx);
-        HashMap<String, String> new_node_info = RyCompilerProxy.node_compile_info.get(ctx) << ["operation": "read"];
+
+        HashMap<String, String> new_node_info = (HashMap)(RyCompilerProxy.node_compile_info.get(ctx) << ["operation": "read"]);
         RyCompilerProxy.updateNodeCompileInfo(ctx, new_node_info);
     }
 
@@ -159,30 +160,36 @@ class RyFunctionListener extends RyBaseListener {
         String function_name = RyCompilerProxy.node_expression.get(ctx.getChild(0));
         String param_list_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
 
-        int param_amount = RyCompilerProxy.function_param_number.get(ctx.getChild(2)) == null ? 0 : RyCompilerProxy.function_param_number.get(ctx.getChild(2));
-        int expect_param_amount = RyCompilerProxy.function_definition.get(function_name);
+        int param_amount = RyCompilerProxy.function_call_param_number.get(ctx.getChild(2)) == null ? 0 : RyCompilerProxy.function_call_param_number.get(ctx.getChild(2));
 
-        if (param_amount != expect_param_amount) {
+        int expect_param_amount = 0;
+
+        if (RyCompilerProxy.function_definition_param_number.get(function_name) != null) {
+            expect_param_amount = RyCompilerProxy.function_definition_param_number.get(function_name);
+        }
+
+        // TODO: fix build in method definition params number counting
+        if (!Buildin.buildin_methods.contains(function_name) && param_amount != expect_param_amount) {
             RyCompilerProxy.printToErrorStream("Argument number error: " + "at function " + function_name + " expect " + expect_param_amount + " params, but get " + param_amount + " params");
         }
 
         if (param_list_expression != null) {
-            function_call_expression = "instance_manager.current_obj().callmethod(\"${function_name}\",${param_list_expression})";
+            function_call_expression = "current_obj.callmethod(\"${function_name}\",${param_list_expression})";
         } else {
-            function_call_expression += "instance_manager.current_obj().callmethod(\"${function_name}\")";
+            function_call_expression += "current_obj.callmethod(\"${function_name}\")";
         }
 
         RyCompilerProxy.node_expression.put(ctx, function_call_expression);
     }
 
     public void enterFunction_call_param_list(RyParser.Function_call_param_listContext ctx) {
-       RyCompilerProxy.storeNodeCompileInfo(ctx);
+        RyCompilerProxy.storeNodeCompileInfo(ctx);
     }
 
     public void exitFunction_call_param_list(RyParser.Function_call_param_listContext ctx) {
         String function_call_params_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-        int params_number = RyCompilerProxy.function_param_number.get(ctx.getChild(0));
-        RyCompilerProxy.function_param_number.put(ctx, params_number);
+        int params_number = RyCompilerProxy.function_call_param_number.get(ctx.getChild(0));
+        RyCompilerProxy.function_call_param_number.put(ctx, params_number);
         RyCompilerProxy.node_expression.put(ctx, function_call_params_expression);
     }
 
@@ -197,25 +204,27 @@ class RyFunctionListener extends RyBaseListener {
         for (int i = 0;i < child_count;i++) {
             if (ctx.getChild(i) != ctx.COMMA()) {
                 if (i != child_count - 1) {
-                    // TODO: one nested instance manager call problem
                     function_call_params_expression += "${RyCompilerProxy.node_expression.get(ctx.getChild(i))},";
                 } else {
-//                    function_call_params_expression += "instance_manager.getInstance(${RyCompilerProxy.node_expression.get(ctx.getChild(i))})";
                     function_call_params_expression += RyCompilerProxy.node_expression.get(ctx.getChild(i));
                 }
             }
         }
 
+        // default is 0
         int all_child_num = 0;
+
+        // multiple parameters
         if (child_count > 1) {
-            int nested_param_num = RyCompilerProxy.function_param_number.get(ctx.getChild(0));
-            int single_param_num = RyCompilerProxy.function_param_number.get(ctx.getChild(2));
+            int nested_param_num = RyCompilerProxy.function_call_param_number.get(ctx.getChild(0));
+            int single_param_num = RyCompilerProxy.function_call_param_number.get(ctx.getChild(2));
             all_child_num = nested_param_num + single_param_num;
         } else {
+            // single parameter
             all_child_num = 1;
         }
 
-        RyCompilerProxy.function_param_number.put(ctx, all_child_num);
+        RyCompilerProxy.function_call_param_number.put(ctx, all_child_num);
         RyCompilerProxy.node_expression.put(ctx, function_call_params_expression);
     }
 
@@ -226,7 +235,7 @@ class RyFunctionListener extends RyBaseListener {
     public void exitFunction_param(RyParser.Function_paramContext ctx) {
         String function_param_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
         RyCompilerProxy.node_expression.put(ctx, function_param_expression);
-        RyCompilerProxy.function_param_number.put(ctx, 1);
+        RyCompilerProxy.function_call_param_number.put(ctx, 1);
     }
 
     public void enterFunction_call_unnamed_param(RyParser.Function_call_unnamed_paramContext ctx) {
@@ -241,6 +250,10 @@ class RyFunctionListener extends RyBaseListener {
     public void exitFunction_call_named_param(RyParser.Function_call_named_paramContext ctx) {
         String named_param_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
         RyCompilerProxy.node_expression.put(ctx, named_param_expression);
+    }
+
+    public void enterFunction_call_assignment(RyParser.Function_call_assignmentContext ctx) {
+        RyCompilerProxy.storeNodeCompileInfo(ctx);
     }
 
     public void exitFunction_call_assignment(RyParser.Function_call_assignmentContext ctx) {

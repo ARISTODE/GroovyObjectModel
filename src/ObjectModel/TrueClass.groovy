@@ -5,7 +5,7 @@ import RuntimeExceptions.ArgumentTypeError
 class TrueClass {
     def static initialize() {
         def and = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = Instance(self);
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -22,7 +22,7 @@ class TrueClass {
         }
 
         def or = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = Instance(self);
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -39,7 +39,7 @@ class TrueClass {
         }
 
         def to_s = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyString, "true");
         }
 

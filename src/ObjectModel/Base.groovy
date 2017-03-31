@@ -53,11 +53,12 @@ class Base {
         return this.cls.issubclass(cls)
     }
 
-    def callmethod(String mtdname, Object... args) {
+    // all method will return a Instance by default
+    def Instance callmethod(String mtdname, Instance... args) {
         // mth is Closure
         def mth = read_attr(mtdname);
         // return the closure with self and args bind to it
-        return mth(args);
+        return (Instance)mth(args);
     }
 
     def is_method(res) {
@@ -66,7 +67,7 @@ class Base {
 
     // return a method with self and args bindings
     def _make_bound_method(self, mth) {
-        def bound = {Object... args -> return mth(self, args)};
+        def bound = {Instance... args -> return mth(self, args)};
         return bound;
     }
 

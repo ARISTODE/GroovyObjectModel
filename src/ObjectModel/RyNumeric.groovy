@@ -3,44 +3,44 @@ package ObjectModel
 class RyNumeric {
     def static initialize() {
         def ceylon = {
-            self, Object... args ->
+            self, Instance... args ->
                 def self_val = self.default_val();
                 def other_val = ((Instance)args[0]).default_val();
                 return self_val <=> other_val;
         };
 
         def ceil = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyInteger, Math.ceil(self.default_val()));
         };
 
         def floor = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyInteger, Math.floor(self.default_val()));
         };
 
         def abs = {
-            self, Object... args ->
+            self, Instance... args ->
                 return Math.abs(self.default_val());
         }
 
         def add = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self.default_val() + ((Instance)args[0]).default_val();
         }
 
         def minus = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self.default_val() - ((Instance)args[0]).default_val();
         }
 
         def div = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self.default_val() / ((Instance)args[0]).default_val();
         }
 
         def module = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self.deault_val() % ((Instance)args[0]).default_val();
         }
 

@@ -5,12 +5,12 @@ class TopObject {
         def cls_mth_map = [:];
 
         def __id__ = {
-            self, Object... args ->
+            self, Instance... args ->
             return self.toString();
         };
 
         def ceylon = {
-            self, Object... args ->
+            self, Instance... args ->
             if (self == args[0]) {
                 return args[0];
             } else {
@@ -19,22 +19,22 @@ class TopObject {
         };
 
         def case_eql = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self == args[0];
         };  // === always overwritten by the children class to implement a different equality checking
 
         def class_name = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self.cls.name();
         };
 
         def is_a = {
-           self, Object... args ->
+           self, Instance... args ->
                 return self.cls.method_resolution_order().contains((RyBaseClass)args[0]);
         };
 
         def to_s = {
-            self, Object... args ->
+            self, Instance... args ->
                 // first fetch the default value of the class. If no, return the identity of the object
                 if (self.read_dic("__default__") != null) {
                     return self.read_dic("__default__");

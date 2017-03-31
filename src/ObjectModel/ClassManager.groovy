@@ -48,7 +48,9 @@ class ClassManager {
         rewriteSuperCls("TopObject", "RyClass");
         rewriteSuperCls("RyModule", "RyClass");
         rewriteSuperCls("RyClass", "RyClass");
-        //other global objects
+
+        // mixin kernel methods to the TopObject
+        _TopObject.mixin(Kernel.initialize());
     }
 
     public void addCls(String cls_name, Map fields, RyBaseClass super_cls, RyBaseClass meta_cls) {

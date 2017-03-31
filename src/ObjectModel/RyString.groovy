@@ -18,21 +18,21 @@ class RyString {
         // overwrite the ceylon method and store the method in the current RyClass fields
         // it get execute firstly in the ancestor chain
         def ceylon = {
-            self, Object... args ->
+            self, Instance... args ->
                 String self_val =(self.read_dic("__default__"));
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
 
                 switch (cls_name) {
                     case "RyString":
-                        return self_val <=> (String)other.default_val();
+                        return new Instance(ClassManager._RyInteger, ["__default__": self_val <=> (String)other.default_val()]);
                     default:
                         throw new ArgumentTypeError("ceylon Method cannot take a ${cls_name} arguments");
                 }
         }
 
         def add = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -55,7 +55,7 @@ class RyString {
         }
 
         def multiply = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -81,12 +81,12 @@ class RyString {
         }
 
         def length = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyInteger, self.read_dic("__default__").length());
         }
 
         def concat = {
-            self, Object... args ->
+            self, Instance... args ->
                 String other = ((Instance)args[0]).read_dic("__default__");
                 String new_val = self.read_dic("__default__") + other;
                 self.write_attr("__default__", new_val);
@@ -94,36 +94,36 @@ class RyString {
         }
 
         def capitalize = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyString, self.read_dic("__default__").capitalize());
         }
 
         def capitalize_change = {
-            self, Object... args ->
+            self, Instance... args ->
                 def new_val = self.read_dic("__default__").capitalize();
                 self.write_attr("__default__", new_val);
                 return new Instance(ClassManager._RyString, new_val);
         }
 
         def upcase = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyString, self.read_dic("__default__").toUpperCase());
         }
 
         def upcase_change = {
-            self, Object... args ->
+            self, Instance... args ->
                 def new_val = self.read_dic("__default__").toUpperCase();
                 self.write_attr("__default__", new_val);
                 return new Instance(ClassManager._RyString, new_val);
         }
 
         def downcase = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyString, self.read_dic("__default__").toLowerCase());
         }
 
         def downcase_change = {
-            self, Object... args ->
+            self, Instance... args ->
                 def new_val = self.read_dic("__default__").toLowerCase();
                 self.write_attr("__default__", new_val);
                 return new Instance(ClassManager._RyString, new_val);
@@ -131,29 +131,29 @@ class RyString {
 
 
         def getChar = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyString, self.read_dic("__default__").charAt((Integer)args[0]));
         }
 
         def chop = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyString, self.read_dic("__default__")[0..-2]);
         }
 
         def chop_change = {
-            self, Object... args ->
+            self, Instance... args ->
                 def new_val = self.read_dic("__default__")[0..-2];
                 self.write_dic("__default__", new_val);
                 return new Instance(ClassManager._RyString, new_val);
         }
 
         def empty = {
-            self, Object... args ->
+            self, Instance... args ->
                 return self.read_dic("__default__") == "" ? new Instance(ClassManager._RyTrueClass, true) : new Instance(ClassManager._RyFalseClass, false);
         }
 
         def insert = {
-            self, Object... args ->
+            self, Instance... args ->
                 // (Integer, StringToInsert)
                 Integer index = (Integer)args[0];
                 String stub = (String)args[1];

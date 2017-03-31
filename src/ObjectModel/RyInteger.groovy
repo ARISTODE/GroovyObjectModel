@@ -5,23 +5,23 @@ import RuntimeExceptions.ArgumentTypeError
 class RyInteger {
     def static initialize() {
         def ceylon = {
-            Instance self, Object... args ->
+            Instance self, Instance... args ->
                 Integer self_val = self.read_attr("__default__");
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
 
                 switch (cls_name) {
                     case "RyInteger":
-                        return self_val <=> (Integer)other.default_val();
+                        return new Instance(ClassManager._RyInteger, ["__default__": self_val <=> (Integer)other.default_val()]);
                     case "RyFloat":
-                        return self_val <=> (Float)other.default_val();
+                        return new Instance(ClassManager._RyInteger, ["__default__": self_val <=> (Float)other.default_val()]);
                     default:
                         throw new ArgumentTypeError("ceylon Method cannot take a ${cls_name} arguments");
                 }
         }
 
         def add = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -43,7 +43,7 @@ class RyInteger {
         }
 
         def minus = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -62,7 +62,7 @@ class RyInteger {
         }
 
         def multiply = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -82,7 +82,7 @@ class RyInteger {
 
 
         def div = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -101,7 +101,7 @@ class RyInteger {
         }
 
         def module = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -121,41 +121,41 @@ class RyInteger {
         }
 
         def exponent = {
-            self, Object... args ->
+            self, Instance... args ->
                 return new Instance(ClassManager._RyInteger, Math.pow(self.default_val(), (Double)args[0]));
         }
 
         def shift_left = {
-            self, Object... args ->
+            self, Instance... args ->
                 Integer bits = (Integer)args[0];
                 return new Instance(ClassManager._RyInteger, ((Instance)self).default_val() << bits);
         }
 
         def shift_right = {
-            self, Object... args ->
+            self, Instance... args ->
                 Integer bits = (Integer)args[0];
                 return new Instance(ClassManager._RyInteger, ((Instance)self).default_val() >> bits);
         }
 
         def is_even = {
-            self, Object... args ->
+            self, Instance... args ->
                 return ((Instance)self).default_val() % 2 == 0 ? new Instance(ClassManager._RyTrueClass, true) : new Instance(ClassManager._RyFalseClass, false);
         }
 
         def is_odd = {
-            self, Object... args ->
+            self, Instance... args ->
                 return ((Instance)self).default_val() % 2 != 0 ? new Instance(ClassManager._RyTrueClass, true) : new Instance(ClassManager._RyFalseClass, false);
         }
 
         def to_s = {
-            self, Object... args ->
+            self, Instance... args ->
                 String val = ((Instance)self).default_val().toString();
-                // return a new String object with the new value encapsulated
+                // return a new String Instance with the new value encapsulated
                 return new Instance(ClassManager._RyString, val);
         }
 
         def to_f = {
-            self, Object... args ->
+            self, Instance... args ->
                 float val = ((Integer)((Instance)self).default_val()).toFloat();
                 return new Instance(ClassManager._RyFloat, val);
         }

@@ -6,23 +6,23 @@ class RyFloat {
     def static initialze() {
 
         def ceylon = {
-            self, Object... args ->
+            self, Instance... args ->
                 Float self_val =(self.read_dic("__default__"));
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
 
                 switch (cls_name) {
                     case "RyInteger":
-                        return self_val <=> (Integer)other.default_val();
+                        return new Instance(ClassManager._RyInteger, ["__default__": self_val <=> (Integer)other.default_val()]);
                     case "RyFloat":
-                        return self_val <=> (Float)other.default_val();
+                        return new Instance(ClassManager._RyInteger, ["__default__": self_val <=> (Float)other.default_val()]);
                     default:
                         throw new ArgumentTypeError("ceylon Method cannot take a ${cls_name} arguments");
                 }
         }
 
         def add = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -45,7 +45,7 @@ class RyFloat {
         }
 
         def minus = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -65,7 +65,7 @@ class RyFloat {
         }
 
         def multiply = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -86,7 +86,7 @@ class RyFloat {
 
 
         def div = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -106,7 +106,7 @@ class RyFloat {
         }
 
         def module = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = (Instance)self;
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();
@@ -126,7 +126,7 @@ class RyFloat {
         }
 
         def to_i = {
-            self, Object... args ->
+            self, Instance... args ->
                 Integer val = ((Float)((Instance)self).default_val()).toInteger();
                 return new Instance(ClassManager._RyInteger, ["__default__": val]);
         }

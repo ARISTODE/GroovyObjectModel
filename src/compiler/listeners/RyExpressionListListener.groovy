@@ -9,8 +9,9 @@ class RyExpressionListListener extends RyBaseListener{
     public void enterExpression_list(RyParser.Expression_listContext ctx) {
         // get the class name (default -> _TopObject)
         def node_info = RyCompilerProxy.node_compile_info.get(ctx.getParent());
+
         if (node_info != null) {
-            RyCompilerProxy.node_compile_info.put(ctx, node_info);
+            RyCompilerProxy.storeNodeCompileInfo(ctx);
         } else {
             // store the information of class and the current scoping
             RyCompilerProxy.node_compile_info.put(ctx, [
@@ -28,12 +29,12 @@ class RyExpressionListListener extends RyBaseListener{
         StringBuilder expression_list_expression = new StringBuilder();
 
         int expr_pointer = 0;
-        while (expr_pointer < child_list_len - 2) {
+        while (expr_pointer < child_list_len - 1) { // minus one since the terminator is removed
             // concatenation
             String child_expression = RyCompilerProxy.node_expression.get(ctx.getChild(expr_pointer));
 //            if (!child_expression.contains("static")) {
                 // processing expressions
-            expression_list_expression.append("\t${child_expression}");
+            expression_list_expression.append("\t${child_expression}\n");
 //            }
             expr_pointer++;
         }

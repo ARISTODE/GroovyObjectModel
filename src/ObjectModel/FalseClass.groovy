@@ -5,7 +5,7 @@ import RuntimeExceptions.ArgumentTypeError
 class FalseClass {
     def static initialize() {
         def and = {
-            self, Object... args ->
+            self, Instance... args ->
                 self = Instance(self);
                 Instance other = (Instance)args[0];
                 String cls_name = other.read_cls().name();

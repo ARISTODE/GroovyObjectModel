@@ -52,18 +52,6 @@ public class RyBaseListener implements RyListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPuts_call(RyParser.Puts_callContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPuts_call(RyParser.Puts_callContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterClass_definition(RyParser.Class_definitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -767,18 +755,6 @@ public class RyBaseListener implements RyListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitConstant(RyParser.ConstantContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPuts(RyParser.PutsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPuts(RyParser.PutsContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

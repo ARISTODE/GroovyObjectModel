@@ -1,5 +1,6 @@
 package compiler.listeners
 
+import compiler.CompileUtils
 import compiler.RyCompilerProxy
 import compiler.RyBaseListener
 import compiler.RyParser
@@ -15,11 +16,11 @@ class RyStringListener extends RyBaseListener{
             // in ruby, only "Hello"*3 is allowed
             String string_expression = null;
             // get operation text "add" or "multiply"
-            String oprText = RyCompilerProxy.getOprText(ctx.op.getText());
+            String oprText = CompileUtils.getOprText(ctx.op.getText());
             // operation implementation is delegate to Ruby Object Model
             left_expr = RyCompilerProxy.node_expression.get(ctx.getChild(0));
             right_expr = RyCompilerProxy.node_expression.get(ctx.getChild(0));
-            string_expression = RyCompilerProxy.generateResultExpression(left_expr, oprText, right_expr);
+            string_expression = CompileUtils.generateResultExpression(left_expr, oprText, right_expr);
             RyCompilerProxy.node_expression.put(ctx, string_expression);
         }
         else if (ctx.getChildCount() == 1) {

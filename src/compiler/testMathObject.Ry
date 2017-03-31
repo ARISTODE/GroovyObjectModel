@@ -1,0 +1,19 @@
+class RyMath
+	def fib(n)
+		if n == 2 || n == 1
+			return 1
+		else
+			return fib(n-1) + fib(n-2)
+		end
+	end
+
+	def addTwoNum(a,b)
+		return a + b
+	end
+end
+
+math_obj = RyMath.new()
+
+
+puts(math_obj.fib(5))
+puts(math_obj.addTwoNum(3,4))

@@ -1,6 +1,7 @@
 package compiler.listeners
 
 import ObjectModel.ScopeManager
+import compiler.CompileUtils
 import compiler.RyBaseListener
 import compiler.RyCompilerProxy
 import compiler.RyParser
@@ -51,8 +52,8 @@ class RyAssignmentListener extends RyBaseListener{
                 }
                 break;
             default:
-                String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                assignment_expression = RyCompilerProxy.generateResultExpression(var_text, assignOprText, right_expression);
+                String assignOprText = CompileUtils.getAssignOprText(ctx.op.getText());
+                assignment_expression = CompileUtils.generateResultExpression(var_text, assignOprText, right_expression);
                 break;
         }
 
@@ -84,8 +85,8 @@ class RyAssignmentListener extends RyBaseListener{
                 }
                 break;
             default:
-                String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                dynamic_assignment_expression = RyCompilerProxy.generateResultExpression(var_text, assignOprText, dynamic_expression);
+                String assignOprText = CompileUtils.getAssignOprText(ctx.op.getText());
+                dynamic_assignment_expression = CompileUtils.generateResultExpression(var_text, assignOprText, dynamic_expression);
                 break;
         }
 
@@ -116,8 +117,8 @@ class RyAssignmentListener extends RyBaseListener{
                 }
                 break;
             default:
-                String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                float_assignment_expression = RyCompilerProxy.generateResultExpression(raw_var_text, assignOprText, float_result_expression);
+                String assignOprText = CompileUtils.getAssignOprText(ctx.op.getText());
+                float_assignment_expression = CompileUtils.generateResultExpression(raw_var_text, assignOprText, float_result_expression);
                 break;
         }
 
@@ -146,8 +147,8 @@ class RyAssignmentListener extends RyBaseListener{
                 }
                 break;
             default:
-                String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                int_assignment_expression = RyCompilerProxy.generateResultExpression(raw_var_text, assignOprText, int_result_expression);
+                String assignOprText = CompileUtils.getAssignOprText(ctx.op.getText());
+                int_assignment_expression = CompileUtils.generateResultExpression(raw_var_text, assignOprText, int_result_expression);
                 break;
         }
 
@@ -176,8 +177,8 @@ class RyAssignmentListener extends RyBaseListener{
                 }
                 break;
             default:
-                String assignOprText = RyCompilerProxy.getAssignOprText(ctx.op.getText());
-                string_assignment_expression = RyCompilerProxy.generateResultExpression(raw_var_text, assignOprText, string_result_expression);
+                String assignOprText = CompileUtils.getAssignOprText(ctx.op.getText());
+                string_assignment_expression = CompileUtils.generateResultExpression(raw_var_text, assignOprText, string_result_expression);
                 break;
         }
 

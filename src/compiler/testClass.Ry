@@ -11,4 +11,4 @@ end
 c = 5
 a = A.new(5)
 a.initialize(5)
-a.sayHello()
+puts(a.sayHello())

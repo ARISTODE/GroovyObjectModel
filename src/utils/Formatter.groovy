@@ -10,8 +10,10 @@ class ${className} {
     }
 
     public static String wrapExpressions(String sourceStr) {
-    String wholeScript = """public static void main(String[] args) {
+    String wholeScript = """public static void main(String[] argvs) {
         ClassManager class_manager = new ClassManager();
+        Instance main = new Instance(class_manager.getCls(\"TopObject\"));
+        Instance current_obj = main;
         ${sourceStr}
     }
     """

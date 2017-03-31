@@ -1,10 +1,9 @@
 package compiler.listeners
 
-import ObjectModel.Instance
+import compiler.CompileUtils
 import compiler.RyCompilerProxy
 import compiler.RyBaseListener
 import compiler.RyParser
-import org.antlr.v4.runtime.tree.ParseTree
 
 class RyDynamicListener extends RyBaseListener{
 
@@ -18,8 +17,8 @@ class RyDynamicListener extends RyBaseListener{
         if (ctx.getChildCount() == 3 && ctx.op != null) {
             String var = RyCompilerProxy.node_expression.get(ctx.getChild(0));
             String dynamic_result_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
-            String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
-            String id_expression = RyCompilerProxy.generateResultExpression(var, opr_text, dynamic_result_expression);
+            String opr_text = CompileUtils.getOprText(ctx.op.getText());
+            String id_expression = CompileUtils.generateResultExpression(var, opr_text, dynamic_result_expression);
             RyCompilerProxy.node_expression.put(ctx, id_expression);
         }
         else if (ctx.getChildCount() == 1) {
@@ -39,7 +38,14 @@ class RyDynamicListener extends RyBaseListener{
     }
 
     public void exitDynamic(RyParser.DynamicContext ctx) {
-        String id_expression = ctx.var_id.getText();
+        String id_expression;
+
+        if (ctx.getChild(0) instanceof RyParser.Function_call_assignmentContext) {
+            id_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
+        } else {
+            id_expression = ctx.var_id.getText();
+        }
+
         RyCompilerProxy.node_expression.put(ctx, id_expression);
     }
 

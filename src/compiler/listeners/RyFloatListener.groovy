@@ -1,5 +1,6 @@
 package compiler.listeners
 
+import compiler.CompileUtils
 import compiler.RyBaseListener
 import compiler.RyCompilerProxy
 import compiler.RyParser
@@ -11,10 +12,10 @@ class RyFloatListener extends RyBaseListener {
         if (ctx.getChildCount() == 3 && ctx.op != null) {
             String left_expression = RyCompilerProxy.node_expression.get(ctx.getChild(0));
             String right_expression = RyCompilerProxy.node_expression.get(ctx.getChild(2));
-            String opr_text = RyCompilerProxy.getOprText(ctx.op.getText());
+            String opr_text = CompileUtils.getOprText(ctx.op.getText());
             //5.0 + 3.0 -> new Instance(class_manager.getCls("RyInteger"), ["__default__": 5.0]).
             // callmethod("add", new Instance(class_manager.getCls("RyInteger"), ["__default__": 3.0]));
-            String float_expression = RyCompilerProxy.generateResultExpression(left_expression, opr_text, right_expression);
+            String float_expression = CompileUtils.generateResultExpression(left_expression, opr_text, right_expression);
             RyCompilerProxy.node_expression.put(ctx, float_expression);
         }
         else if (ctx.getChildCount() == 1) {

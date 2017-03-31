@@ -3,29 +3,29 @@ package ObjectModel
 class RyComparable {
      def static initialize() {
         def less_than = {
-            self, Object... args ->
+            self, Instance... args ->
             return self.callmethod("ceylon",args) < 0;
         };
 
         def less_eql_than = {
-            self, Object... args ->
+            self, Instance... args ->
                 def res = self.callmethod("ceylon", args);
                 return res == 0 || res < 0;
         };
 
         def bigger_eql_than = {
-            self, Object... args ->
+            self, Instance... args ->
                 def res = self.callmethod("ceylon", args);
                 return res == 0 || res > 0;
         }
 
         def bigger_than = {
-            self, Object... args ->
+            self, Instance... args ->
             return self.callmethod("ceylon", args) > 0;
         };
 
         def is_equal = {
-            self, Object... args ->
+            self, Instance... args ->
             return self.callmethod("ceylon", args) == 0;
         }
 

@@ -1,26 +1,26 @@
 package compiler
-
 import compiler.listeners.*
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.RuleContext
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.ParseTreeProperty
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import utils.Formatter
-import java.lang.reflect.Array
 
 class RyCompilerProxy {
-    // ------------- initialze setups -------------
+    // ------------- initialize setups -------------
 
     // used to store node's expression
     public static ParseTreeProperty<String> node_expression = new ParseTreeProperty<String>();
     // map used to store function params list
     // map used to store class name with nodes
     public static ParseTreeProperty<String> class_definition = new ParseTreeProperty<>();
-    public static HashMap<String, Integer> function_definition = new HashMap<>();
-    public static ParseTreeProperty<Integer> function_param_number = new ParseTreeProperty<>();
+
+    // used to store the number of params of function definitions
+    public static HashMap<String, Integer> function_definition_param_number = new HashMap<>();
+    // used to store the number of params of function calls
+    public static ParseTreeProperty<Integer> function_call_param_number = new ParseTreeProperty<>();
 
     public static ParseTreeProperty<HashMap<String,String>> node_compile_info = new ParseTreeProperty<HashMap<String, String>>();
 
@@ -39,7 +39,7 @@ class RyCompilerProxy {
         if (args.length > 0) {
             inputFile = args[0];
             currentDir = System.getProperty("user.dir");
-            genName = retriveDir(args[0].substring(0, args[0].length() - 3));
+            genName = retrieveDir(args[0].substring(0, args[0].length() - 3));
         }
 
         println(currentDir)
@@ -104,102 +104,18 @@ import ObjectModel.*;
         String whole_script = "${dependencies}${code_body}"
 
         // write content to specific file
-//        file.setText(whole_script)
+        file.setText(whole_script)
 //        func_file.setText(Formatter.wrapFunctions(out_function.toString()));
 
         println("----------------------------debug--------------------------")
         // TODO: debug cursor
         println(whole_script);
         println("----------------------------debug--------------------------")
-
-
-//        println("----------------------------debug--------------------------")
-//        // TODO: debug cursor
-//        println(Formatter.wrapFunctions(out_function.toString(), out_class.toString()));
-//        println("----------------------------debug--------------------------")
-
     }
 
-    public static String retriveDir(String fileName) {
+    public static String retrieveDir(String fileName) {
         String[] strs = fileName.split("/");
         return strs[strs.length - 1];
-    }
-
-    public static String getOprText(String opr) {
-        String ret_text = null;
-        switch(opr) {
-            case "+" :
-                ret_text = "add";
-                break;
-            case "-" :
-                ret_text = "minus";
-                break;
-            case "*" :
-                ret_text = "multiply";
-                break;
-            case "/" :
-                ret_text = "div";
-                break;
-            case "%" :
-                ret_text = "module";
-                break;
-        }
-
-        return ret_text;
-    }
-
-    public static String getCompareText(String opr) {
-        String ret_text = null;
-
-        switch(opr) {
-            case ">":
-                ret_text = " > 0";
-                break;
-            case "<":
-                ret_text = " < 0";
-                break;
-            case ">=":
-                ret_text = " >= 0";
-                break;
-            case "<=":
-                ret_text = " <= 0";
-                break;
-            case "==":
-                ret_text = " == 0";
-                break;
-        }
-
-        return ret_text;
-    }
-
-    public static String getAssignOprText(String opr) {
-        String ret_text;
-        switch(opr) {
-            case "+=":
-                ret_text = "addEqualAssign";
-                break;
-            case "-=":
-                ret_text = "minEqualAssign";
-                break;
-            case "*=":
-                ret_text = "mulEqualAssign";
-                break;
-            case "/=":
-                ret_text = "divEqualAssign";
-                break;
-            case "%=":
-                ret_text = "modEqualAssign";
-                break;
-            default:
-                ret_text = " = ";
-                break;
-        }
-
-        return ret_text;
-    }
-
-    public static String generateResultExpression(String leftVal, String operation, String rightVal) {
-        return "${leftVal}.callmethod(\"${operation}\",${rightVal})";
     }
 
     public static void printToOutStream(String text) {
@@ -235,7 +151,7 @@ import ObjectModel.*;
     // write a method to the class according to the class definition
     public static String write_cls_func(cls_name="TopObject", func_expr) {
         // write function directly to the cls_method map
-        return "class_manager.getCls(\"${cls_name}\").write_attr(${func_expr})"
+        return "class_manager.getCls(\"${cls_name}\").write_attr(${func_expr})\n"
     }
 
     public static void storeNodeCompileInfo(RuleContext ctx) {
