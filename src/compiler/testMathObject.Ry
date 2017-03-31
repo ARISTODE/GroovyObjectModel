@@ -1,4 +1,4 @@
-class RyMath
+class RyMath < RyNumeric
 	def fib(n)
 		if n == 2 || n == 1
 			return 1

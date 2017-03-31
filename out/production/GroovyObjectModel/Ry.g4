@@ -22,7 +22,9 @@ expression : class_definition
            | return_statement
            ;
 
-class_definition : CLASS class_name ('<' class_name)? CRLF class_body CRLF? END;
+class_definition : CLASS class_name ('<' super_class_name)? CRLF class_body CRLF? END;
+
+super_class_name : constant;
 class_name: constant;
 class_body: expression_list;
 

@@ -48,6 +48,16 @@ public interface RyListener extends ParseTreeListener {
 	 */
 	void exitClass_definition(RyParser.Class_definitionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RyParser#super_class_name}.
+	 * @param ctx the parse tree
+	 */
+	void enterSuper_class_name(RyParser.Super_class_nameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RyParser#super_class_name}.
+	 * @param ctx the parse tree
+	 */
+	void exitSuper_class_name(RyParser.Super_class_nameContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RyParser#class_name}.
 	 * @param ctx the parse tree
 	 */
